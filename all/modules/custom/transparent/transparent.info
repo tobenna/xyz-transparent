@@ -1,0 +1,5 @@
+name = Transparent: Project Progress Manager
+description = Manages Progress of Projects
+package = Transparent
+version = 0.0-dev
+core = 7.x

@@ -1,0 +1,348 @@
+<?php /**
+ * @file
+ * Install file for Transparent module.
+ */
+
+
+/**
+ * Implements hook_install().
+ */
+function transparent_install() {
+  // Define node types.
+  $types = [];
+  // Create the vocabulary type for the project categories.
+  $vocabs = [];
+  $vocabs['category'] = (object) [
+    'name' => 'Category',
+    'description' => st('The category the project fals into.'),
+    'machine_name' => 'project_category',
+    ];
+  $vocabs['project_name'] = (object) [
+    'name' => 'Project',
+    'description' => st('The project name | used for sorting purposes.'),
+    'machine_name' => 'project_name',
+    ];
+  $vocabs['contractor_name'] = (object) [
+    'name' => 'Contractor',
+    'description' => st('The organization name | Used for sorting purposes.'),
+    'machine_name' => 'contractor_name',
+    ];
+    foreach ($vocabs as $vocab) { 
+     taxonomy_vocabulary_save($vocab);
+    }
+  $types['project'] = [
+    'type' => 'project',
+    'name' => st('Project'),
+    'base' => 'node_content',
+    'description' => st('The Project being tracked.'),
+    'field_list' => [
+      'project_category' =>[
+        'field_name' => 'project_category',
+        'type' => 'taxonomy_term_reference',
+        'cardinality' => 1,
+        'label' => st('Category'),
+        'required' => TRUE,
+        'widget' => [
+          'type' => 'options_select',           
+            ],
+        'settings' => [
+          'allowed_values' => [
+            [
+              'vocabulary' => 'project_category',
+              'parent' => 0,
+              ],
+          ],
+        ],
+        'display' => [
+          'default' => ['type' => 'hidden'],
+          'teaser' => ['type' => 'hidden']
+        ],
+      ],
+      'project_year' =>[
+        'field_name' => 'project_year',
+        'type' => 'list_text',
+        'label' => st('Year'),
+        'required' => TRUE,
+        'cardinality' => 1,
+        'settings' => ['allowed_values' => [
+          0 => '2001',
+          1 => '2002',
+          2 => '2003',
+          3 => '2004',
+          4 => '2005',
+          5 => '2006',
+          6 => '2007',
+          7 => '2008',
+          8 => '2009',
+          9 => '2010',
+          10 => '2011',
+          11 => '2012',
+          12 => '2013',
+          13 => '2014',
+          14 => '2015',
+          15 => '2016',
+          16 => '2017',
+          17 => '2018',
+          18 => '2019',
+          19 => '2020',
+          20 => '2021',
+          21 => '2022',
+          22 => '2023',
+          23 => '2024',
+          24 => '2025',
+          25 => '2026',
+          26 => '2027']],
+        'widget'      => [
+          'type'    => 'options_select',
+           ],
+      ],
+      'contractor_name' =>[
+        'field_name' => 'contractor_name',
+        'type' => 'taxonomy_term_reference',
+        'cardinality' => 1,
+        'label' => st('Contractor'),
+        'required' => TRUE,
+        'widget' => [
+          'type' => 'taxonomy_autocomplete',           
+            ],
+        'settings' => [
+          'allowed_values' => [
+            [
+              'vocabulary' => 'contractor_name',
+              'parent' => 0,
+              ],
+          ],
+        ],
+        'display' => [
+        ],
+      ],
+      'total_sum' => [
+        'field_name' => 'total_sum',
+        'type' => 'number_decimal',
+        'label' => st('Total Sum'),
+        'required' => TRUE,
+        'cardinality' => 1,
+        'settings' => [
+          'precision' => 10,
+          'scale' => 2,
+          'decimal_separator' => '.',
+          ],
+        'instance_settings' => [
+          'min' => '',
+          'max' => '',
+          'prefix' => '',
+          'suffix' => '',
+        ],
+        'default_widget' => 'number',
+        'default_formatter' => 'number_decimal',
+        'display' => [],
+        ],
+    ],
+  ];
+  $types['contractor'] = [
+    'type' => 'contractor',
+    'name' => st('Contractor'),
+    'base' => 'node_content',
+    'description' => st('The Contractor handling the project'),
+    'body_label' => st('Bio'),
+    'field_list' => [
+      'contractor_logo' => [
+        'field_name' => 'contractor_logo',
+        'type' => 'image',
+        'label' => st('Logo'),
+        'required' => FALSE,
+        'cardinality' => 1,
+        'display' => [
+          'default' => [
+            'label' => 'hidden',
+            'settings' => [
+              'image_style' => 'medium',
+              'image_link' => '',
+              ],            
+            ],
+        ],
+        'widget' => [
+        'type'    => 'image_image',
+            ],
+        ],
+      'contractor_rc_number' => [
+        'field_name' => 'contractor_rc_number',
+        'type' => 'text',
+        'required' => FALSE,
+        'label' => st('RC Number'),
+        'cardinality' => 1,
+        'widget'      => [
+          'type'    => 'text_textfield',
+           ],
+        ],
+    ],
+  ];
+  $types['project_category'] = [
+    'type' => 'project_category',
+    'name' => st('Category'),
+    'base' => 'node_content',
+    'description' => st('Project milestones'),
+    'body_label' => st('Details'),
+    'field_list' => []
+  ];
+  $types['contractor'] = [
+    'type' => 'contractor',
+    'name' => st('Contractor'),
+    'base' => 'node_content',
+    'description' => st('The Contractor handling the project'),
+    'field_list' => [
+      'contractor_logo' => [
+        'field_name' => 'contractor_logo',
+        'type' => 'image',
+        'label' => st('Logo'),
+        'required' => FALSE,
+        'cardinality' => 1,
+        'display' => [
+          'default' => [
+            'label' => 'hidden',
+            'settings' => [
+              'image_style' => 'medium',
+              'image_link' => '',
+              ],            
+            ],
+        ],
+        'widget' => [
+        'type'    => 'image_image',
+            ],
+        ],
+      'contractor_phone_number' => [
+        'field_name' => 'contractor_rc_number',
+        'type' => 'text',
+        'required' => FALSE,
+        'label' => st('Phone Number'),
+        'cardinality' => 1,
+        'widget'      => [
+          'type'    => 'text_textfield',
+           ],
+        ],
+    ],
+  ];
+  $types['organization'] = [
+    'type' => 'organization',
+    'name' => st('Organization'),
+    'base' => 'node_content',
+    'description' => st('Organization that gave out the project'),
+    'body_label' => st('Bio'),
+    'field_list' => [
+      'organization_logo' => [
+        'field_name' => 'organization_logo',
+        'label' => st('Logo'),
+        'type' => 'image',
+        'required' => FALSE,
+        'cardinality' => 1,
+        'display' => [
+          'default' => [
+            'label' => 'hidden',
+            'settings' => [
+              'image_style' => 'medium',
+              'image_link' => '',
+              ],            
+            ],
+        ],
+        'widget' => [
+        'type'    => 'image_image',
+            ],
+        ],
+    ],
+  ];
+  
+  foreach ($types as $type){
+   //Set defaults and add body fields.
+    $field_list = $type['field_list'];
+    $type_object = node_type_set_defaults($type);
+    node_add_body_field($type_object, $type['body_label']);
+    node_type_save($type_object);
+    // Create fields.
+    foreach (_transparent_installed_fields($field_list) as $field) {
+     unset($field['required']);  
+     unset($field['label']);
+     unset($field['widget']);
+     //dpm($field);
+     field_create_field($field);
+    }
+    foreach (_transparent_installed_instances($field_list) as $instance) {
+      $instance['entity_type'] = 'node';
+      $instance['bundle'] = $type['type'];
+      unset($instance['cardinality']);
+      
+      field_create_instance($instance);
+    }
+  }
+}
+
+
+/**
+ * Return an array of fields, to be used during the install and uninstall process.
+ */
+function _transparent_installed_fields($field_list) {
+  return $field_list;
+}
+
+/**
+ * Return an array of instances
+ */
+function _transparent_installed_instances($field_list){
+  return ($field_list);
+}
+
+//Remember to remove taxonomy when uninstalling.
+
+/*
+ * Implements hook_uninstall().
+ */
+function transparent_uninstall(){
+  variable_del('transparent_project_last_saved');
+  variable_del('transparent_contractor_last_saved');
+  variable_del('transparent_organisation_last_saved');
+  //Remove nodes created of the content types
+  $type_keys = array_keys($types);
+  foreach ($type_keys as $type_key) {
+    $sql = 'SELECT nid FROM {node} n WHERE n.type = :type';
+    $result = db_query($sql, array(':type' => $type_key));
+    $nids = array();
+    foreach ($result as $row) {
+      $nids[] = $row->nid;
+    }
+    node_delete_multiple($nids);
+  }
+  //TODO:
+  foreach ($types as $type) {
+    //Delete fields.
+    $field_list = $type['field_list'];
+    foreach (array_keys(_transparent_installed_fields($field_list)) as $field) {
+    field_delete_field($field);
+  }
+  }
+  foreach ($type_keys as $type_key){
+    // Delete field instances.
+    $instances = field_info_instances('node', $type_key);
+    foreach ($instances as $instance_name => $instance) {
+      $instance_name = '';
+      field_delete_instance($instance);
+    }
+      //Remove content type.
+      node_type_delete($type_key);
+      field_purge_batch(1000);
+  }  
+  
+  //Remove taxonomy terms.
+  $vocabs = [];
+  $vocabs['category'] = [
+    'machine_name' => 'project_category',
+    ];
+  $vocabs['project_name'] = [
+    'machine_name' => 'project_name',
+    ];
+  $vocabs['contractor_name'] = [
+    'machine_name' => 'contractor_name',
+    ];
+    foreach ($vocabs as $vocab_name) {
+      $vocab = taxonomy_vocabulary_machine_name_load($vocab_name['machine_name']);
+      taxonomy_vocabulary_delete($vocab->vid);
+    } 
+}
