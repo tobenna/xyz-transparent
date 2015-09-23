@@ -1,0 +1,26 @@
+
+name = Transparent
+description = A custom theme for Transparent Project Manager
+core = 7.x
+version = VERSION
+
+; CSS
+
+stylesheets[all][] = assets/css/normalize.min.css
+stylesheets[all][] = assets/css/foundation.min.css
+stylesheets[all][] = assets/css/transparent_responsive.css
+
+
+; JS
+
+scripts[] = assets/js/foundation.min.js
+
+; REGIONS
+
+regions[menu_tray] = Menu Tray
+regions[content] = Main Content
+regions[sidebar] = Sidebar
+
+
+
+

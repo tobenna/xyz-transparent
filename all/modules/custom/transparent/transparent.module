@@ -1,0 +1,613 @@
+<?php
+
+
+/*
+ * Implements hook_menu().
+ */
+function transparent_menu(){
+  $items['node'] = [
+    'title' => 'Contractor View',
+    'description' => 'View the details of the selected project.',
+    'page callback' => 'transparent_contractor_view',
+    'page arguments' => [1],
+    'access callback' => TRUE,
+    ];
+  
+  return $items;
+}
+
+/*
+ * Create permissions to restrict access to certain fields.
+ * Implements hook_permission().
+ */
+function transparent_permission() {
+  // Note: This would be very easy to generate programatically,
+  // but it's all typed out here for clarity.
+  // The key text is the machine name of the permission.
+  $perms['edit any field_eng1'] = array('title' => t('Mark engineering check as done'));
+  
+  $perms['edit any field_ch1'] = array('title' => t('Mark Chairman Checks as done'));
+  
+  $perms['edit any field_aud2'] = array('title' => t('Mark Audit Checks as done'));
+  
+  $perms['edit any field_paid'] = array('title' => t('Mark a payment as Paid'));
+
+  return $perms;
+}
+
+/**
+ * 
+ * Implements hook_node_insert().
+ * @param node the node before its saved.
+ */
+
+function transparent_node_insert($node){
+  switch ($node->type) {
+    case 'project';
+    break;
+    case 'project_step';
+      //Create PV numbers and add to pv table
+      $project_id = $node->field_project['und'][0]['nid'];
+      $project = node_load($project_id);      
+      $id_category = $project->field_project_category['und'][0]['nid'];
+      $category = node_load($id_category);
+      $category_code = $category->field_category_code['und'][0]['value'];
+      db_insert('transparent_pv_table')
+          ->fields([
+          'p_nid' => $node->nid,
+          'pv_number' => generate_pvnumber($category_code),
+          'tax_name' => $node->title])
+          ->execute();
+      break;
+    default;  
+      break;
+  }
+  
+}
+/**
+ * 
+ * @param type $nodes
+ * @param type $types
+ */
+
+function transparent_node_load($nodes, $types){
+  if($types == ['project_step']){
+      foreach ($nodes as $node) {  
+        $p_nid = $node->field_project['und'][0]['nid'];
+        $project = node_load($p_nid);
+        
+        $node->contract_sum = $project->field_contract_sum['und'][0]['value'];
+    }
+  }
+}
+/**
+ * Checking for appropriate Checks 
+ * Create complete complete project_steps from templete_steps.
+ * 
+ * Implements hook_node_presave().
+ * @param type $node
+ * 
+ */
+function transparent_node_presave($node){
+  switch ($node->type) {
+    case 'project';
+      //Check if node is beind updated and not created.
+      if (!$node->nid == NULL) {
+        //Check for appropriate approvals
+      if (($node->field_aud1['und'][0]['value'] == '1') && ($node->field_ch1['und'][0]['value'] == '1') &&
+          ($node->original->field_aud1['und'][0]['value'] == '0') && ($node->original->field_ch1['und'][0]['value'] == '1')) {
+        //Create the project steps
+        db_insert('transparent_join_table')
+            ->fields([
+              'nid' => $node->nid,
+              'project_id' => set_project_id($node->title)])
+            ->execute();
+        $categroy_id = $node->field_project_category['und'][0]['nid'];
+        $query = new EntityFieldQuery();
+        $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'template_step')
+            ->fieldCondition('field_project_category', 'nid', $categroy_id)
+            ->addMetaData('account', user_load(1)); // Run the query as user 1.
+        $result = $query->execute();
+        $result_keys = array_keys($result['node']);
+        $nodes = node_load_multiple($result_keys);
+        foreach ($nodes as $single_node) {
+          $new_node = new stdClass();
+          $new_node->type = "project_step";
+          $new_node->title = $single_node->title;
+          $new_node->language = LANGUAGE_NONE;
+          node_object_prepare($new_node);
+          $new_node->field_percentage_of_total = $single_node->field_percentage_of_total;
+          $new_node->field_withholding_tax = $single_node->field_withholding_tax;
+          $new_node->field_value_added_tax = $single_node->field_value_added_tax;
+          $new_node->field_step_number = $single_node->field_step_number;
+          $new_node->field_project[$node->language][0]['nid'] = $node->nid;
+          $new_node->body = $single_node->body;
+          $new_node->uid = 1;
+          $new_node->comment = 0;
+          $new_node->status = 1;
+          $new_node->promote = 0;
+
+          node_save($new_node);
+        }
+      }
+      break;
+      }
+      
+  }
+}
+
+/**
+ * Sandbox for testing node view
+ * @param type $node
+ */
+function transparent_node_view($node){
+  switch ($node->type){
+    case 'project_step';
+      
+      //Get the contract sum from the contract sum table.
+//      $project = node_load($node->field_project['und'][0]['nid']);
+//      $node->field_contract_sum['und'][0]['value'] = $project->field_contract_sum['und'][0]['value'];
+//
+      
+      break;
+    default;
+      break;
+  }
+}
+
+
+
+/**
+ * Validate content types before save
+ * Impletement hook_node_validate().
+ */
+
+function transparent_node_validate($node, $form, $form_state){
+  switch ($node->type) {
+    case 'project';
+      $lot = sprintf( '%03d', $node->field_lot_number['und'][0]['value'] );
+      $year = date('y',strtotime($node->field_year['und'][0]['value']));
+      $quarter = $node->field_quarter['und'][0]['value'];
+      $unique = $lot . $year . $quarter;
+      $nid = -1;
+      $form1 = $form;
+      $form_state1 = $form_state;
+      empty($form1);
+      empty($form_state1);
+      if(isset($node->nid)){
+        $nid = $node->nid;
+      }
+      if(get_node_id($unique) && !($nid == get_node_id($unique))){
+        form_set_error('field_lot_number', 'A project with these details already exists');
+        form_set_error('field_quarter', '');
+        form_set_error('field_year', '');
+      }
+  }
+}
+/**
+ * Delete the project id from keymapped table
+ * Implements hook_node_delete().
+ * @param node the node before its saved.
+ */
+
+function transparent_node_delete($node){
+  switch ($node->type) {
+    case 'project';
+      
+      //Check if it's an approved project and has project steps
+      if(($node->field_ch1['und'][0]['value'] == 1) && ($node->field_aud1['und'][0]['value'])){
+         db_delete('transparent_join_table')
+      ->condition('nid', $node->nid)->execute();
+      $categroy_id = $node->nid;
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'project_step')
+      ->fieldCondition('field_project', 'nid', $categroy_id)
+      ->addMetaData('account', user_load(1)); // Run the query as user 1.
+      $result = $query->execute();
+      $result_keys = array_keys($result['node']);
+      node_delete_multiple($result_keys);
+      drupal_set_message('Accompaning project steps have been deleted');
+      }
+      //delete project_id from the Project ID database. 
+      
+     
+      break;
+    case 'project_step';
+      db_delete('transparent_pv_table')
+      ->condition('p_nid', $node->nid)->execute();
+      drupal_set_message('Accompaning PVs have been deleted');
+    default;
+      break;
+  }
+}
+
+
+
+/**
+ * Page Callback for project view
+ * @param int Project ID
+ */
+function transparent_project_view($project_id){
+    $build = [];
+    if(!get_node_id($project_id)== NULL){
+      $node = node_load(get_node_id($project_id));
+      drupal_set_title($node->title);
+      $build['node_display'] = node_view($node);
+      $build['node_display']['#node']->title = NULL;
+      $categroy_id = $node->nid;
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'project_step')
+      ->fieldCondition('field_project', 'nid', $categroy_id)
+      ->addMetaData('account', user_load(1)); // Run the query as user 1.
+      $result = $query->execute();
+      $result_keys = array_keys($result['node']);
+      $project_steps = node_load_multiple($result_keys);
+      
+      $build['project_steps'] = node_view_multiple($project_steps);
+      
+      return $build;
+    } else {
+    drupal_not_found();
+    }
+}
+/**
+ * Callback function project step view. 
+ * @param int Project ID
+ * @param int Step ID
+ * @return type
+ */
+function transparent_project_step_view($project_id, $step_id){
+    
+    //Get the project
+    if(!get_node_id($project_id)== NULL){
+      $node = node_load(get_node_id($project_id));
+      $categroy_id = $node->nid;
+      $query = new EntityFieldQuery();
+      $query->entityCondition('entity_type', 'node')
+      ->entityCondition('bundle', 'project_step')
+      ->fieldCondition('field_project', 'nid', $categroy_id)
+      ->fieldCondition('field_step_number', 'value', $step_id, '=')
+      ->addMetaData('account', user_load(1)); // Run the query as user 1.
+      $result = $query->execute();
+      if (!$result == []){
+        $build = [];
+        $result_keys = array_keys($result['node']);
+        $step = node_load($result_keys[0]);
+        drupal_set_title($node->title . ' '. $step->title);
+        $build['project_step'] = node_view($step);
+        $build['project_step']['#node']->title = NULL;
+        return $build;
+      }
+      else{
+        drupal_not_found();
+      }
+      
+    } else{
+      drupal_not_found();
+    }
+}
+
+
+
+/**
+ * Strips the project and removes the backslashes
+ * @return string Generated Project ID.
+ * @param string The Node Title
+ */
+function set_project_id($title) { 
+  $project_id = str_replace('/', '', $title);
+  return $project_id;
+} 
+/**
+ * Create a get node id from base16 key
+ * @return int Node's Unique ID.
+ */
+function get_node_id($project_id) { 
+  $node_id = NULL;
+  $result = db_query('SELECT nid, project_id FROM {transparent_join_table} WHERE project_id = (:pid)' ,  [':pid' => $project_id] );
+  foreach ($result as $row) {
+    $node_id = $row->nid;
+  }
+  return $node_id;
+} 
+
+function transparent_contractor_view(){
+  drupal_not_found();
+}
+
+// Sandbox
+
+/**
+ * Implements hook_block_info().
+ */
+function transparent_block_info() {
+  $blocks = [];
+
+  $blocks['comment_block'] = [
+    'info' => t('Comment on Content'), 
+    'cache' => DRUPAL_NO_CACHE,
+   ];
+  
+  $blocks['approval_block'] = [
+    'info' => t('Approval From'), 
+    'cache' => DRUPAL_NO_CACHE,
+  ];
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function transparent_block_view($delta = '') {
+  $block = [];
+  global $user;
+  $rids = array_keys($user->roles);
+  switch ($delta) {
+    case 'comment_block':
+      $block['subject'] = t('Comment on Content');
+      $block['content'] = drupal_get_form('comment_block_form');
+    break;
+    case 'approval_block':{
+      $node = menu_get_object();
+      //approvals
+      $appr = [];
+      if($node->type == 'project_step'){
+       // dpm($node);
+        $appr = [
+          'eng1' =>  $node->field_eng1['und'][0]['value'],
+          'ch2' =>  $node->field_ch2['und'][0]['value'],
+          'aud2' =>  $node->field_aud2['und'][0]['value'],
+          'ch3' =>  $node->field_ch3['und'][0]['value'],
+          'paid' => $node->field_paid['und'][0]['value']
+        ];
+        //Checking all the values for the various hidden fields.
+        $ap_string = 
+            $appr['eng1']
+            .$appr['ch2']
+            .$appr['aud2']
+            .$appr['ch3']
+            .$appr['paid'];
+        dpm($ap_string);
+        $showRoles = [5,6,3,7];
+        $result = array_intersect($rids, $showRoles);
+        if((!empty($result)) && show_approval_block($ap_string, $rids)){
+          $block['content'] = drupal_get_form('approval_form');
+        }
+      }elseif($node->type == 'project'){
+        $showRoles = [5,6,3];
+        $appr= [
+        $node->field_ch1['und'][0]['value'],
+        $node->field_aud1['und'][0]['value']
+        ];
+        $result = array_intersect($showRoles, $rids);
+        if((!empty($result)) && (($appr == ['0','0']))|| ($appr == ['1','0'])){
+          $block['content'] = drupal_get_form('approval_form');
+        }
+        
+      }
+    }
+    break;
+  }
+  return $block;
+}
+
+/**
+ * Custom forms.
+ */
+
+/**
+ * Comment On Step Form.
+ * @param type $form
+ * @param type $form_state
+ * @return string
+ */
+function comment_block_form($form, &$form_state) {
+  $form['comment_body'] = array(
+    '#type' => 'textarea',
+    '#required' => true,
+    '#description' => t('Insert Your Comment Here')
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save'),
+  );
+
+  return $form;
+}
+/**
+ * Custom form submit function.
+ */
+
+function comment_block_form_submit($form, &$form_state) {
+  // You need the have Devel module enabled for dpm() to work.
+  if($node = menu_get_object()){
+    $nid = $node->nid;
+    global $user;
+    $uid = $user->uid;
+    $comment = (object) [
+        'nid' => $nid,
+        'cid' => 0,
+        'pid' => 0,
+        'uid' => $uid,
+        'mail' => '',
+        'is_anonymous' => 0,
+        'homepage' => '',
+        'status' => COMMENT_PUBLISHED,
+        'subject' => NULL,
+        'language' => LANGUAGE_NONE,
+        'comment_body' => [
+          LANGUAGE_NONE => [
+            0 => [
+              'value' => $form_state['values']['comment_body'] ,
+              'format' => 'filtered_html'
+              ]
+    ]
+    ],
+        ];
+  comment_submit($comment);
+  comment_save($comment);
+  }
+}
+
+/**
+ * Validation for comment_form().
+ */
+function comment_block_form_validate($form, &$form_state){
+  
+  //Check for the color 'blue'.
+  if($form_state['values']['comment_body'] == 'blue'){
+    form_set_error('comment_body', 'Sorry, your favorite color is actually yellow.');
+  }
+  
+}
+
+/**
+ * Approval Settings Form.
+ * @param type $form
+ * @param type $form_state
+ * @return string
+ */
+function approval_form($form, &$form_state) {
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Approve'),
+  );
+
+  return $form;
+}
+/**
+ * Submit handler for the approval button
+ * @param type $form
+ * @param type $form_state
+ */
+function approval_form_submit($form, &$form_state){
+  $node = menu_get_object();
+  global $user;
+  $rids = array_keys($user->roles);
+  switch ($node->type){
+    case 'project';
+      $appr= [
+        $node->field_ch1['und'][0]['value'],
+        $node->field_aud1['und'][0]['value']
+      ];
+      if($appr == ['0','0']){
+        //dpm("CHAIRMAN JUST");
+        $node->field_ch1['und'][0]['value'] = '1';
+        node_save($node);
+      } elseif($appr == ['1','0']){
+        $node->field_aud1['und'][0]['value'] = '1';
+        node_save($node);
+        //dpm("AUDITOR JUST");
+      }
+      //$showRoles = [5,0];
+      //dpm('node->type');
+      break;
+    case 'project_step';
+      $appr = [
+          'eng1' =>  $node->field_eng1['und'][0]['value'],
+          'ch2' =>  $node->field_ch2['und'][0]['value'],
+          'aud2' =>  $node->field_aud2['und'][0]['value'],
+          'ch3' =>  $node->field_ch3['und'][0]['value'],
+          'paid' => $node->field_paid['und'][0]['value']
+        ];
+        //Checking all the values for the various hidden fields.
+        $ap_string = 
+            $appr['eng1']
+            .$appr['ch2']
+            .$appr['aud2']
+            .$appr['ch3']
+            .$appr['paid'];
+        switch ($ap_string) {
+          case '10000';
+              //Chairman Approved.
+            $node->field_ch2['und'][0]['value'] = '1';
+            node_save($node);
+            break;
+          case '11000';
+            //Auditor Approved.
+            $node->field_aud2['und'][0]['value'] = '1';
+            node_save($node);
+            break;
+          case '11100';
+            //Chairman Re-Approved.
+            $node->field_ch3['und'][0]['value'] = '1';
+            node_save($node);
+            break;
+          case '11110';
+            //Chairman Re-Approved.
+            $node->field_paid['und'][0]['value'] = '1';
+            node_save($node);
+            break;
+          default:
+            break;
+        }
+    default;
+      break;
+  }
+}
+
+
+/**
+ * 
+ * @param string the category to be saved under
+ * @return string
+ */
+function generate_pvnumber($category){
+  $last_number = variable_get('transparent_pv_last_saved');
+  $new_number = sprintf( '%04d', ($last_number+1));
+  $pv_number = $category ."-". $new_number;
+  variable_set('transparent_pv_last_saved', ($last_number+1));
+  return $pv_number;
+}
+/**
+ * Determine whether to show to User
+ * @param type approval string.
+ * @param type roles array.
+ * @return bool if the button can be viewed or not.
+ */
+function show_approval_block($apprs,$rids){
+  switch ($apprs){
+    case '10000';
+        if(in_array(5, $rids)){
+          dpm("Chairman");
+          return TRUE;
+        }
+        else {
+          return FALSE;
+        }
+      break;
+    case '11000';
+        if(in_array(6, $rids)){
+          dpm("Auditor");
+          return TRUE;
+        }
+        else {
+          return FALSE;
+        }
+      break;
+    case '11100';
+        if(in_array(5, $rids)){
+          dpm("Chairman2");
+          return TRUE;
+        }
+        else {
+          return FALSE;
+        }
+      break;
+    case '11110';
+        if(in_array(7, $rids)){
+          dpm("Accountant");
+          return TRUE;
+        }
+        else {
+          return FALSE;
+        }
+      break;
+    default;
+      return FALSE;
+  }
+}

@@ -8,46 +8,79 @@
  * Implements hook_install().
  */
 function transparent_install() {
-  // Define node types.
-  // 
-  // Create the vocabulary type for the project categories.
-  $vocabs = [];
-  $vocabs['category'] = (object) [
-    'name' => 'Category',
-    'description' => st('The category the project fals into.'),
-    'machine_name' => 'project_category',
-    ];
-  $vocabs['project_name'] = (object) [
-    'name' => 'Project',
-    'description' => st('The project name | used for sorting purposes.'),
-    'machine_name' => 'project_name',
-    ];
-  $vocabs['contractor_name'] = (object) [
-    'name' => 'Contractor',
-    'description' => st('The organization name | Used for sorting purposes.'),
-    'machine_name' => 'contractor_name',
-    ];
-    foreach ($vocabs as $vocab) { 
-     taxonomy_vocabulary_save($vocab);
-    }
+  
+  variable_set('transparent_project_last_saved', 0);
+  variable_set('transparent_pv_last_saved', 0);
 }
 /*
  * Implements hook_uninstall().
  */
 function transparent_uninstall(){
   //Remove taxonomy terms.
-  $vocabs = [];
-  $vocabs['category'] = [
-    'machine_name' => 'project_category',
+  variable_del('transparent_project_last_saved');
+}
+
+// Create a new table that would store unique_id of every project
+//
+/**
+ * Implements hook_schema().
+ */
+function transparent_schema() {
+  //Create index last value inserted variable
+  $schema = transparent_create_join_table('transparent_join_table');
+  $schema['transparent_pv_table'] = [
+    'description' => 'Keeps track of the created performance voucher numbers',
+    'fields' => [
+      'p_nid' => [
+        'description' => 'The {node}.id of the project steps',
+        'type' => 'int',
+        'not null' => FALSE,
+        ],
+      'pv_number' => [
+        'description' => 'The the generated performance voucher for the payment.',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        ],
+      'tax_name' => [
+        'description' => 'the name of the taxed item.',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+      ],
+      ],
+  ];
+  
+  return $schema;
+}
+
+/**
+ * Creates a table formatted for hook_schemas join array
+ *
+ *
+ * @param $table_name
+ *   The name of the field to be created
+ *
+ * @return array an array of the table structure.
+ *
+ */
+function transparent_create_join_table($table_name){
+  
+  $table[$table_name] = [
+    'description' => 'Stores a unique hexadecimal id for each node.',
+    'fields' => [
+      'nid' => [
+        'description' => 'The {nodes}.nid of the node.',
+        'type' => 'int',
+        'not null' => FALSE,
+        ],
+      'project_id' => [
+        'description' => 'The projects six digit hex id.',
+        'type' => 'varchar',
+        'length' => '255',
+        'not null' => FALSE,
+        ],
+      ],
     ];
-  $vocabs['project_name'] = [
-    'machine_name' => 'project_name',
-    ];
-  $vocabs['contractor_name'] = [
-    'machine_name' => 'contractor_name',
-    ];
-    foreach ($vocabs as $vocab_name) {
-      $vocab = taxonomy_vocabulary_machine_name_load($vocab_name['machine_name']);
-      taxonomy_vocabulary_delete($vocab->vid);
-    } 
+  return $table;
 }
