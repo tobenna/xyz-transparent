@@ -204,9 +204,9 @@ function convert_number_to_words($number) {
       // We hide the comments and links now so that we can render them later.
       hide($content['comments']);
       hide($content['links']);
-      dpm($node);
+      //dpm($node);
     ?>
-      <table class='project-table'>
+      <table class='project-table small-12'>
           <tbody>
             <tr>
 							<th>TITLE</th>
@@ -279,10 +279,14 @@ function convert_number_to_words($number) {
 							<th>IN WORDS</th>
               <td class="in-words"><?php echo convert_number_to_words($amount_due); ?> NAIRA</td>
 						</tr>
+            <tr>
+							<th>STATUS</th>
+              <td id="STATUS"><?php echo $node->status_message; ?></td>
+						</tr>
           </tbody>
       </table>
   </div>
-
+    
   <?php print render($content['links']); ?>
 
 </div>

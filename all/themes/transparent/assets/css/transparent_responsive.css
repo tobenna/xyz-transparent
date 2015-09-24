@@ -1,5 +1,5 @@
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
-
+/*@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+*/
 img { 
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -27,24 +27,41 @@ td.hover-row{
 }
 .in-words{
     text-transform: capitalize;
+    text-align: center !important;
     
 }
 td.hover-row:hover{
     background-color: rgba(19,102,165, 0.1);
 }
+#STATUS{
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bolder;
+    background-color: aliceblue;
+}
 
 * {
     outline: none;
-    font-family: 'Roboto','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "proxima-nova",'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .main {
     clear: left;
     letter-spacing: 1px;
 }
-
+.project-table tr:nth-child(even) {background-color: hsla(0,0%,0%,.05);}
+.project-table tr:nth-child(odd) {background: #FFF}
+.project-table th{
+    white-space: nowrap;
+}
 .project-table th, .project-table td{
     text-align: left;
+    border: none;
+}
+
+input[type=submit]{
+    width: 50%;
+    padding:10px;
 }
 /*===================================================================*/
 /* // H O M E P A G E  and  U N I V E R S A L S   		  
@@ -79,17 +96,30 @@ td.hover-row:hover{
     height: 2.1em;
 	padding-left: 25px;
  }
- 
+ .avatar-wrap{
+     display: inline-block;
+ }
+ .avatar-wrap img{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    padding: 6px;
+ }
+.row.comment-body p{
+     font-weight: 100;
+     color: gray;
+     font-size: 14px;
+ }
  #primary-nav{
     margin: 0;
     position: relative;
-    top: 25px;
     transition: top 0.75s ease 0s;
     height: 47px;
     width: 100%;
  }
  #primary-nav a{
      color: white;
+     
  }
  
  #primar-nav a:hover{
@@ -215,4 +245,26 @@ td.hover-row:hover{
 
 @media (max-width: 1023px) {
   #homeWrapper { margin-left: 22px; margin-right: 22px; width: auto; }
+}
+
+
+.row span.date{
+    margin-top: 0.9375em;
+    display: block;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: gray;
+    font-weight: bold;
+    font-style: normal;
+    float: right;
+}
+
+.row span.role {
+    float: right;
+    display: block;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: gray;
+    font-weight: bold;
+    font-style: normal;
 }

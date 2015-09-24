@@ -1,40 +1,5 @@
 <?php
 
-
-/*
- * Implements hook_menu().
- */
-function transparent_menu(){
-  $items['node'] = [
-    'title' => 'Contractor View',
-    'description' => 'View the details of the selected project.',
-    'page callback' => 'transparent_contractor_view',
-    'page arguments' => [1],
-    'access callback' => TRUE,
-    ];
-  
-  return $items;
-}
-
-/*
- * Create permissions to restrict access to certain fields.
- * Implements hook_permission().
- */
-function transparent_permission() {
-  // Note: This would be very easy to generate programatically,
-  // but it's all typed out here for clarity.
-  // The key text is the machine name of the permission.
-  $perms['edit any field_eng1'] = array('title' => t('Mark engineering check as done'));
-  
-  $perms['edit any field_ch1'] = array('title' => t('Mark Chairman Checks as done'));
-  
-  $perms['edit any field_aud2'] = array('title' => t('Mark Audit Checks as done'));
-  
-  $perms['edit any field_paid'] = array('title' => t('Mark a payment as Paid'));
-
-  return $perms;
-}
-
 /**
  * 
  * Implements hook_node_insert().
@@ -77,6 +42,7 @@ function transparent_node_load($nodes, $types){
         $project = node_load($p_nid);
         
         $node->contract_sum = $project->field_contract_sum['und'][0]['value'];
+        $node->status_message = project_step_get_permission_message(project_step_get_permission_string($node));
     }
   }
 }
@@ -370,7 +336,7 @@ function transparent_block_view($delta = '') {
             .$appr['aud2']
             .$appr['ch3']
             .$appr['paid'];
-        dpm($ap_string);
+       // dpm($ap_string);
         $showRoles = [5,6,3,7];
         $result = array_intersect($rids, $showRoles);
         if((!empty($result)) && show_approval_block($ap_string, $rids)){
@@ -507,20 +473,7 @@ function approval_form_submit($form, &$form_state){
       //dpm('node->type');
       break;
     case 'project_step';
-      $appr = [
-          'eng1' =>  $node->field_eng1['und'][0]['value'],
-          'ch2' =>  $node->field_ch2['und'][0]['value'],
-          'aud2' =>  $node->field_aud2['und'][0]['value'],
-          'ch3' =>  $node->field_ch3['und'][0]['value'],
-          'paid' => $node->field_paid['und'][0]['value']
-        ];
-        //Checking all the values for the various hidden fields.
-        $ap_string = 
-            $appr['eng1']
-            .$appr['ch2']
-            .$appr['aud2']
-            .$appr['ch3']
-            .$appr['paid'];
+      $ap_string = project_step_get_permission_string($node);
         switch ($ap_string) {
           case '10000';
               //Chairman Approved.
@@ -538,7 +491,7 @@ function approval_form_submit($form, &$form_state){
             node_save($node);
             break;
           case '11110';
-            //Chairman Re-Approved.
+            //Auditor Approved.
             $node->field_paid['und'][0]['value'] = '1';
             node_save($node);
             break;
@@ -573,7 +526,7 @@ function show_approval_block($apprs,$rids){
   switch ($apprs){
     case '10000';
         if(in_array(5, $rids)){
-          dpm("Chairman");
+          //dpm("Chairman");
           return TRUE;
         }
         else {
@@ -582,7 +535,7 @@ function show_approval_block($apprs,$rids){
       break;
     case '11000';
         if(in_array(6, $rids)){
-          dpm("Auditor");
+         // dpm("Auditor");
           return TRUE;
         }
         else {
@@ -591,7 +544,7 @@ function show_approval_block($apprs,$rids){
       break;
     case '11100';
         if(in_array(5, $rids)){
-          dpm("Chairman2");
+         // dpm("Chairman2");
           return TRUE;
         }
         else {
@@ -600,7 +553,7 @@ function show_approval_block($apprs,$rids){
       break;
     case '11110';
         if(in_array(7, $rids)){
-          dpm("Accountant");
+         // dpm("Accountant");
           return TRUE;
         }
         else {
@@ -610,4 +563,59 @@ function show_approval_block($apprs,$rids){
     default;
       return FALSE;
   }
+}
+
+/**
+ * Sends displays the payment status of the project-step from the approval string.
+ * @param string approval code.
+ * @return string Status Message translated from the approval string.
+ */
+function project_step_get_permission_message($ap_string){
+    $project_message = '';
+    switch ($ap_string){
+      case '00000';
+        $project_message .= "Awaiting Site Inspection";
+        break;
+      case '10000';
+        $project_message .= "Inspected. Awaiting Chairman's Approval";
+        break;
+      case '11000';
+        $project_message .= "Inspected. Awaiting Audit's Approval";
+        break;
+      case '11100';
+        $project_message .= "Audited. Awaiting Chairman's Second Approval";
+        break;
+      case '11110';
+        $project_message .= "Approved. Awaiting Sent to Accounts for payment";
+        break;
+      case '11111';
+        $project_message .= "PAID";
+        break;
+      default;
+        break;
+    }
+     return $project_message;
+}
+
+/**
+ * 
+ * @param type $node (project-step)
+ * @return string Approval String (String containing the state of approval of the project)
+ */
+function project_step_get_permission_string($node){
+  $appr = [
+                        'eng1' =>  $node->field_eng1['und'][0]['value'],
+                        'ch2' =>  $node->field_ch2['und'][0]['value'],
+                        'aud2' =>  $node->field_aud2['und'][0]['value'],
+                        'ch3' =>  $node->field_ch3['und'][0]['value'],
+                        'paid' => $node->field_paid['und'][0]['value']
+                      ];
+                      //Checking all the values for the various hidden fields.
+                      $ap_string = 
+                          $appr['eng1']
+                          .$appr['ch2']
+                          .$appr['aud2']
+                          .$appr['ch3']
+                          .$appr['paid'];
+                      return $ap_string;
 }

@@ -103,11 +103,9 @@
 							<img id="logo" src="<?php echo base_path(); ?>sites/all/themes/transparent/assets/img/logo-dark.svg">
 						</div>
 						<nav id="primary-nav">
-							<ul class="main">
-								<li><a href="/collections/guys">GUYS</a></li>
-								<li><a href="/collections/guys">GIRLS</a></li>
-								<li><a href="/collections/guys">GEAR</a></li>
-							</ul>
+							<?php if ($page['top_menu1']): ?>
+                 <?php print render($page['top_menu1']); ?>
+               <?php endif; ?>
 							<div id="account-nav">
 								<ul>
 									<li>
@@ -117,9 +115,6 @@
 
 									</li>
 									<li> / </li>
-									<li>
-										<a href="/cart">Cart (5)</a>
-									</li>
 								</ul>
 							</div>
 						</nav>
@@ -135,7 +130,7 @@
 					<br>
 				</div>
 				<!-- MAIN Content Block -->
-				<div class="small-12 medium-8 columns">
+				<div class="small-12 medium-12 large-8 columns">
             
             <?php print render($title_prefix); ?>
             <?php if ($title): ?><h3 class="title" id="page-title"><?php print $title; ?></h3><?php endif; ?>
@@ -148,7 +143,7 @@
 				</div>
 				<!-- END Content Block -->
 				<!-- Side Bar Second -->
-				<aside id="sidebar" class="small-12 medium-4 columns">
+				<aside id="sidebar" class="small-12 medium-12 large-4 columns">
         <?php if ($page['sidebar']): ?>
           <?php print render($page['sidebar']); ?>
         <?php endif; ?>
