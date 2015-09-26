@@ -31,8 +31,9 @@ function transparent_node_insert($node){
 }
 /**
  * 
- * @param type $nodes
- * @param type $types
+ * @param node The node objects
+ * @param string The node types
+ * Implements hook_node_load().
  */
 
 function transparent_node_load($nodes, $types){
@@ -42,7 +43,14 @@ function transparent_node_load($nodes, $types){
         $project = node_load($p_nid);
         
         $node->contract_sum = $project->field_contract_sum['und'][0]['value'];
+        //Calling multiple functions in order to prepare and save the correct status message.
         $node->status_message = project_step_get_permission_message(project_step_get_permission_string($node));
+    }
+  } elseif($types == ['project']){
+    foreach ($nodes as $node){
+     $node->percentage_complete = get_completion_status($node);
+     $node->status_message = project_get_status($node);
+     
     }
   }
 }
@@ -55,6 +63,7 @@ function transparent_node_load($nodes, $types){
  * 
  */
 function transparent_node_presave($node){
+  global $user;
   switch ($node->type) {
     case 'project';
       //Check if node is beind updated and not created.
@@ -89,13 +98,23 @@ function transparent_node_presave($node){
           $new_node->field_step_number = $single_node->field_step_number;
           $new_node->field_project[$node->language][0]['nid'] = $node->nid;
           $new_node->body = $single_node->body;
-          $new_node->uid = 1;
+          $new_node->uid = $user->uid;
           $new_node->comment = 0;
           $new_node->status = 1;
           $new_node->promote = 0;
 
           node_save($new_node);
         }
+        //Create the Retention object.
+        $query2 = new EntityFieldQuery();
+        $query2->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'retention_template')
+            ->fieldCondition('field_project_category', 'nid', $categroy_id)
+            ->addMetaData('account', user_load(1)); // Run the query as user 1.
+        $retention_result = $query2->execute();
+        dpm($retention_result);
+        
+        
       }
       break;
       }
@@ -109,6 +128,16 @@ function transparent_node_presave($node){
  */
 function transparent_node_view($node){
   switch ($node->type){
+    case 'project';
+      $categroy_id = $node->field_project_category['und'][0]['nid'];
+      $query = new EntityFieldQuery();
+        $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'retention_template')
+            ->fieldCondition('field_project_category', 'nid', $categroy_id)
+            ->addMetaData('account', user_load(1)); // Run the query as user 1.
+        $retention_result = $query->execute();
+        $result = array_keys($retention_result['node'])[0];
+        dpm($result);
     case 'project_step';
       
       //Get the contract sum from the contract sum table.
@@ -320,36 +349,28 @@ function transparent_block_view($delta = '') {
       $node = menu_get_object();
       //approvals
       $appr = [];
+      //Payment Approval Settings
       if($node->type == 'project_step'){
-       // dpm($node);
-        $appr = [
-          'eng1' =>  $node->field_eng1['und'][0]['value'],
-          'ch2' =>  $node->field_ch2['und'][0]['value'],
-          'aud2' =>  $node->field_aud2['und'][0]['value'],
-          'ch3' =>  $node->field_ch3['und'][0]['value'],
-          'paid' => $node->field_paid['und'][0]['value']
+       $ap_string = project_step_get_permission_string($node);
+        $showNames = [
+            'Chairman','Head Audit','Head Accounts',
+            'administrator','Head Engineering'
         ];
-        //Checking all the values for the various hidden fields.
-        $ap_string = 
-            $appr['eng1']
-            .$appr['ch2']
-            .$appr['aud2']
-            .$appr['ch3']
-            .$appr['paid'];
-       // dpm($ap_string);
-        $showRoles = [5,6,3,7];
+        $showRoles = get_role_id($showNames);
         $result = array_intersect($rids, $showRoles);
         if((!empty($result)) && show_approval_block($ap_string, $rids)){
           $block['content'] = drupal_get_form('approval_form');
         }
-      }elseif($node->type == 'project'){
-        $showRoles = [5,6,3];
-        $appr= [
-        $node->field_ch1['und'][0]['value'],
-        $node->field_aud1['und'][0]['value']
+      }// For handling project approval permissions.
+      elseif($node->type == 'project'){
+        $ap_string = $node->field_ch1['und'][0]['value'] . $node->field_aud1['und'][0]['value'];
+        $showNames = [
+            'Chairman','Head Audit',
+            'administrator'
         ];
+        $showRoles = get_role_id($showNames);
         $result = array_intersect($showRoles, $rids);
-        if((!empty($result)) && (($appr == ['0','0']))|| ($appr == ['1','0'])){
+        if((!empty($result)) && project_show_approval($ap_string, $rids)){
           $block['content'] = drupal_get_form('approval_form');
         }
         
@@ -475,6 +496,11 @@ function approval_form_submit($form, &$form_state){
     case 'project_step';
       $ap_string = project_step_get_permission_string($node);
         switch ($ap_string) {
+          case '00000';
+              //Chairman Approved.
+              $node->field_eng1['und'][0]['value'] = '1';
+              node_save($node);
+            break; 
           case '10000';
               //Chairman Approved.
             $node->field_ch2['und'][0]['value'] = '1';
@@ -493,6 +519,8 @@ function approval_form_submit($form, &$form_state){
           case '11110';
             //Auditor Approved.
             $node->field_paid['und'][0]['value'] = '1';
+            //$node->field_date_paid
+            
             node_save($node);
             break;
           default:
@@ -525,7 +553,7 @@ function generate_pvnumber($category){
 function show_approval_block($apprs,$rids){
   switch ($apprs){
     case '10000';
-        if(in_array(5, $rids)){
+        if(in_array(get_role_id(["Chairman"])[0], $rids)){
           //dpm("Chairman");
           return TRUE;
         }
@@ -534,7 +562,7 @@ function show_approval_block($apprs,$rids){
         }
       break;
     case '11000';
-        if(in_array(6, $rids)){
+        if(in_array(get_role_id(["Head Audit"])[0], $rids)){
          // dpm("Auditor");
           return TRUE;
         }
@@ -543,7 +571,7 @@ function show_approval_block($apprs,$rids){
         }
       break;
     case '11100';
-        if(in_array(5, $rids)){
+        if(in_array(get_role_id(["Chairman"])[0], $rids)){
          // dpm("Chairman2");
           return TRUE;
         }
@@ -552,7 +580,7 @@ function show_approval_block($apprs,$rids){
         }
       break;
     case '11110';
-        if(in_array(7, $rids)){
+        if(in_array(get_role_id(["Head Accounts"])[0], $rids)){
          // dpm("Accountant");
           return TRUE;
         }
@@ -565,6 +593,27 @@ function show_approval_block($apprs,$rids){
   }
 }
 
+
+function project_show_approval($apprs, $rids){
+  switch ($apprs){
+    case '00';
+      if(in_array(get_role_id(["Chairman"])[0], $rids)){
+        return TRUE;
+      }
+      break;
+    case '10';
+      dpm(get_role_id(["Head Audit"])[0]);
+      if(in_array(get_role_id(["Head Audit"])[0], $rids)){
+        
+        return TRUE;
+      }
+      break;
+    case '11';
+      return FALSE;
+    default;
+      return FALSE;
+  }
+}
 /**
  * Sends displays the payment status of the project-step from the approval string.
  * @param string approval code.
@@ -618,4 +667,65 @@ function project_step_get_permission_string($node){
                           .$appr['ch3']
                           .$appr['paid'];
                       return $ap_string;
+}
+
+
+/**
+* Helper function for getting the completion status
+* @param $node Project Type
+* @return float Percentage of the Project that has been completed.
+*/
+function get_completion_status($node){
+  $query = new EntityFieldQuery();
+     $query->entityCondition('entity_type', 'node')
+         ->entityCondition('bundle', 'project_step')
+         ->fieldCondition('field_project', 'nid', $node->nid)
+         ->fieldCondition('field_paid', 'value','1')
+         ->addMetaData('account', user_load(1)); // Run the query as user 1.
+     $result = $query->execute();
+     $result_keys = [];
+     $percentage = 0;
+     if(!$result == NULL){
+       $result_keys = array_keys($result['node']);
+       $nodes = node_load_multiple($result_keys);
+       foreach ($nodes as $step) {
+         $percentage += (float) $step->field_percentage_of_total['und'][0]['value'];
+
+       }
+     }
+     return $percentage;
+}
+
+/**
+ * Helper function to get the
+ * @param array The Names of the User types.
+ * @return mixed  if the Role ID is found, it returns it if not 0
+ */
+function get_role_id($role_strings){
+  $rid = [];
+    foreach ($role_strings as $role_string){
+      $rid[] = (int) array_search($role_string, user_roles());
+    }
+    return $rid;
+}
+
+/**
+ * Helper fucntion to get the status message of a project;
+ * @param project
+ * @return string Status Message.
+ */
+function project_get_status($node){
+  $permstring = $node->field_ch1['und'][0]['value'].$node->field_aud1['und'][0]['value'];
+  switch ($permstring){
+    case '00';
+      $message = "Awaiting approval from Chairman";
+      break;
+    case '10';
+      $message = "Awaiting approval from audit";
+      break;
+    case '11';
+      $message = "ACTIVE";
+      break;
+  }
+  return $message;
 }

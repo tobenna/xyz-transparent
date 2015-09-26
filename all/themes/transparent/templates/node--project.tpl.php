@@ -97,7 +97,7 @@
       hide($content['comments']);
       hide($content['links']);
     ?>
-      <table class='project-table'>
+      <table class='project-table small-12'>
           <tbody>
             <tr>
 							<th>TITLE</th>
@@ -113,7 +113,7 @@
 						</tr>
             <tr>
 							<th>PERCENTAGE COMPLETION</th>
-              <td><?php $percentage = get_completeion_status($node);
+              <td><?php $percentage = $node->percentage_complete;
                         echo $percentage;?> %
               </td>
 						</tr>
@@ -132,37 +132,16 @@
                 }
 ?></td>
 						</tr>
+            <tr>
+							<th>STATUS</th>
+              <td id="STATUS"><?php echo $node->status_message; ?></td>
+						</tr>
           </tbody>
       </table>
   </div>
 
   <?php 
    print render($content['links']);
-   
-   /**
-    * Helper function to get the completion status
-    */
-   
-   function get_completeion_status($node){
-     $query = new EntityFieldQuery();
-        $query->entityCondition('entity_type', 'node')
-            ->entityCondition('bundle', 'project_step')
-            ->fieldCondition('field_project', 'nid', $node->nid)
-            ->fieldCondition('field_paid', 'value','1')
-            ->addMetaData('account', user_load(1)); // Run the query as user 1.
-        $result = $query->execute();
-        $result_keys = [];
-        $percentage = 0;
-        if(!$result == NULL){
-          $result_keys = array_keys($result['node']);
-          $nodes = node_load_multiple($result_keys);
-          foreach ($nodes as $step) {
-            $percentage += (float) $step->field_percentage_of_total['und'][0]['value'];
-
-          }
-        }
-        return $percentage;
-   }
   ?>
 
 </div>

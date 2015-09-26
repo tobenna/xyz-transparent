@@ -234,40 +234,12 @@ function convert_number_to_words($number) {
 							<th>RETENTION</th>
               <td>&#x20A6; <span class="table-number">&dash;<?php echo number_format((string) (0.05 * (float) $node->contract_sum), 2, '.', ','); ?></span></td>
 						</tr>
-            <tr>
-							<th>PREVIOUS PAYMENTS</th>
-              <?php 
-                /**
-                  * Helper function to get percentage of previous payments
-                  */
-                 function get_completeion_status($node){
-                   $query = new EntityFieldQuery();
-                      $query->entityCondition('entity_type', 'node')
-                          ->entityCondition('bundle', 'project_step')
-                          ->fieldCondition('field_project', 'nid', $node->nid)
-                          ->fieldCondition('field_paid', 'value','1')
-                          ->addMetaData('account', user_load(1)); // Run the query as user 1.
-                      $result = $query->execute();
-                      $result_keys = [];
-                      $percentage = 0;
-                      if(!$result == NULL){
-                        $result_keys = array_keys($result['node']);
-                        $nodes = node_load_multiple($result_keys);
-                        foreach ($nodes as $step) {
-                          $percentage += (float) $step->field_percentage_of_total['und'][0]['value'];
+            <!--<tr>-->
+              
+             <?php
+             /*<td>&#x20A6; <span class="table-number"><?php echo number_format((string) ($previous_payments), 2, '.', ','); ?></span></td> */ ?>
 
-                        }
-                      }
-                      return $percentage;
-                 }
-              
-              $previous_payments = (0.01 *((float) (get_completeion_status($node->field_project['und'][0]['node'])))) * (float) (($node->contract_sum) * 0.95);
-              
-              ?>
-              
-              <td>&#x20A6; <span class="table-number"><?php echo number_format((string) ($previous_payments), 2, '.', ','); ?></span></td>
-
-						</tr>
+						<!--</tr> -->
             <tr class="ammount-due">
 							<th>AMOUNT DUE (<?php (float) $percentage_total = $node->field_percentage_of_total['und'][0]['value'];
                 echo $percentage_total;?>%)</th>

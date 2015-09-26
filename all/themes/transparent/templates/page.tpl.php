@@ -143,6 +143,11 @@
 				</div>
 				<!-- END Content Block -->
 				<!-- Side Bar Second -->
+        <?php $rid = array_search('Head Accounts', user_roles());
+            //dpm($rid);
+            //global $user;
+            //dpm($user->roles);
+            //dpm(user_roles());?>
 				<aside id="sidebar" class="small-12 medium-12 large-4 columns">
         <?php if ($page['sidebar']): ?>
           <?php print render($page['sidebar']); ?>

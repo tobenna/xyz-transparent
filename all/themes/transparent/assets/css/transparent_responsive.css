@@ -51,12 +51,15 @@ td.hover-row:hover{
 }
 .project-table tr:nth-child(even) {background-color: hsla(0,0%,0%,.05);}
 .project-table tr:nth-child(odd) {background: #FFF}
-.project-table th{
-    white-space: nowrap;
-}
+
 .project-table th, .project-table td{
     text-align: left;
     border: none;
+}
+.project-table th{
+    white-space: nowrap;
+    border-right: 2px dashed #ccc;
+    
 }
 
 input[type=submit]{
