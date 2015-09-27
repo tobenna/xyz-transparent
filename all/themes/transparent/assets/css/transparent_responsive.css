@@ -61,7 +61,15 @@ td.hover-row:hover{
     border-right: 2px dashed #ccc;
     
 }
-
+.PAID{
+    color:green;
+}
+.UNPAID{
+    color:red;
+}
+#date-paid{
+    text-align: center;
+}
 input[type=submit]{
     width: 50%;
     padding:10px;

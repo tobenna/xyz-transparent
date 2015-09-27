@@ -208,14 +208,6 @@ function convert_number_to_words($number) {
     ?>
       <table class='project-table small-12'>
           <tbody>
-            <?php if (!$node->field_date_paid == []): ?>
-            <tr>
-							<th>DATE PAID</th>
-              <td id="date-paid"><?php   
-                echo format_date($node->field_date_paid['und'][0]['value'], 'short');?>
-              </td>
-						</tr>
-            <?php endif; ?>
             <tr>
 							<th>TITLE</th>
 							<td><?php echo $node->field_project['und'][0]['node']->field_title['und'][0]['safe_value']; ?></td>
@@ -238,10 +230,6 @@ function convert_number_to_words($number) {
 							<th>CONTRACT SUM</th>
               <td>&#x20A6; <span class="table-number"><?php echo number_format($node->contract_sum, 2, '.', ','); ?></span></td>
 						</tr>
-            <tr>
-							<th>RETENTION</th>
-              <td>&#x20A6; <span class="table-number">&dash;<?php echo number_format((string) (0.05 * (float) $node->contract_sum), 2, '.', ','); ?></span></td>
-						</tr>
             <!--<tr>-->
               
              <?php
@@ -252,7 +240,7 @@ function convert_number_to_words($number) {
 							<th>AMOUNT DUE (<?php (float) $percentage_total = $node->field_percentage_of_total['und'][0]['value'];
                 echo $percentage_total;?>%)</th>
               <td>&#x20A6; <span class="table-number"><?php 
-                $amount_due = ($percentage_total/100) * 0.95* (float)($node->contract_sum);
+                $amount_due = ($percentage_total/100) * 1* (float)($node->contract_sum);
               echo number_format((string) ($amount_due), 2, '.', ','); ?></span></td>
 						</tr>
             <tr>
@@ -263,7 +251,6 @@ function convert_number_to_words($number) {
 							<th>STATUS</th>
               <td id="STATUS"><?php echo $node->status_message; ?></td>
 						</tr>
-            
           </tbody>
       </table>
   </div>
