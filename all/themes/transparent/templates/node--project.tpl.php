@@ -104,8 +104,12 @@
 							<td><?php echo $node->field_title['und'][0]['safe_value']; ?></td>
 						</tr>
             <tr>
-							<th>SITE LOCATION</th>
+							<th>SITE ADDRESS</th>
 							<td><?php echo $node->field_address_of_project['und'][0]['safe_value']; ?></td>
+						</tr>
+            <tr>
+							<th>LOCAL GOVERNMENT</th>
+							 <td><a href="<?php echo base_path() . drupal_get_path_alias('node/' . $node->field_local_government['und'][0]['nid'])?>"><?php echo $node->field_local_government['und'][0]['node']->title; ?></a></td>
 						</tr>
             <tr>
 							<th>CONTRACTOR</th>

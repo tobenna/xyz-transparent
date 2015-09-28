@@ -21,6 +21,8 @@ regions[menu_tray] = Menu Tray
 regions[content] = Main Content
 regions[sidebar] = Sidebar
 regions[top_menu1] = Top Menu 1
+regions[content_bottom] = Content Bottom
+
 
 
 

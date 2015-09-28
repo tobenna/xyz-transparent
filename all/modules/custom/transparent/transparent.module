@@ -199,25 +199,17 @@ function transparent_node_delete($node){
       
       //Check if it's an approved project and has project steps
       if(($node->field_ch1['und'][0]['value'] == 1) && ($node->field_aud1['und'][0]['value'])){
-         db_delete('transparent_join_table')
+      db_delete('transparent_join_table')
       ->condition('nid', $node->nid)->execute();
       $categroy_id = $node->nid;
       $query = new EntityFieldQuery();
       $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'project_step')
       ->fieldCondition('field_project', 'nid', $categroy_id)
       ->addMetaData('account', user_load(1)); // Run the query as user 1.
       $result = $query->execute();
       $result_keys = array_keys($result['node']);
+      dpm($result_keys);
       node_delete_multiple($result_keys);
-      $query2 = new EntityFieldQuery();
-      $query2->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'retention')
-      ->fieldCondition('field_project', 'nid', $categroy_id)
-      ->addMetaData('account', user_load(1)); // Run the query as user 1.
-      $result2 = $query->execute();
-      $result_keys2 = array_keys($result2['node']);
-      node_delete_multiple($result_keys2);
       drupal_set_message('Accompaning retention has been deleted');
       }
       //delete project_id from the Project ID database. 
@@ -790,6 +782,9 @@ function project_get_status($node){
     case '11';
       $message = "ACTIVE";
       break;
+    case '01';
+      $message = "Awaiting aprroval from Chairman";
+      break;
   }
   return $message;
 }
@@ -835,4 +830,13 @@ function set_first_step($node) {
         $current_step->field_active['und'][0]['value'] = '1' ;
         node_save($current_step);
         //drupal_set_message('Set First Step');
+}
+
+/**
+ * Implements hook_views_api().
+ */
+function transparent_views_api() {
+  return array(
+    'api' => 3,
+  );
 }

@@ -6,3 +6,6 @@ core = 7.x
 
 dependencies[] = menu
 dependencies[] = comment
+
+; INCLUDES
+files[] = includes/views_handler_percentage_completed.inc
