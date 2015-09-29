@@ -50,6 +50,7 @@ function transparent_node_load($nodes, $types){
     foreach ($nodes as $node){
      $node->percentage_complete = get_completion_status($node);
      $node->status_message = project_get_status($node);
+     $node->retention_paid = retention_paid($node);
     } 
   }
 }
@@ -568,7 +569,8 @@ function approval_form_submit($form, &$form_state){
         case '11110';
           //Auditor Approved.
           $node->field_paid['und'][0]['value'] = '1';
-          //$node->field_date_paid
+          $node->field_date_paid['und'][0]['value'] = time();
+          set_next_active_step($node);
           node_save($node);
           break;
       }
@@ -810,12 +812,17 @@ function set_next_active_step($node) {
             ->fieldOrderBy('field_step_number', 'value')
             ->addMetaData('account', user_load(1));
         $result = $query->execute();
-        $result_keys = array_keys($result['node']);
-        $next_active_step = node_load($result_keys[0]);
-        $node->field_active['und'][0]['value'] = '0';
-        $next_active_step->field_active['und'][0]['value'] = '1';
-        node_save($node);
-        node_save($next_active_step);
+        if (isset($result['node'])){
+          $result_keys = array_keys($result['node']);
+          $next_active_step = node_load($result_keys[0]);
+          $node->field_active['und'][0]['value'] = '0';
+          $next_active_step->field_active['und'][0]['value'] = '1';
+          node_save($node);
+          node_save($next_active_step);
+        }else{
+          $node->field_active['und'][0]['value'] = '0';
+          node_save($node);
+        }
 }
 
 function set_first_step($node) {
@@ -839,4 +846,21 @@ function transparent_views_api() {
   return array(
     'api' => 3,
   );
+}
+
+function retention_paid($node){
+  $nid = $node->nid;
+  $query = new EntityFieldQuery();
+        $query->entityCondition('entity_type', 'node')
+            ->entityCondition('bundle', 'retention')
+            ->fieldCondition('field_project', 'nid', $nid)        
+            ->fieldCondition('field_paid', 'value','1')
+            ->addMetaData('account', user_load(1));
+        $result = $query->execute();
+        if (isset($result['node'])){
+          $paid = 1;
+        } else {
+          $paid = 0;
+        }
+        return $paid;
 }

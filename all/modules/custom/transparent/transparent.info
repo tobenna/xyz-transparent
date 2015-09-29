@@ -9,3 +9,4 @@ dependencies[] = comment
 
 ; INCLUDES
 files[] = includes/views_handler_percentage_completed.inc
+files[] = includes/views_handler_amount_paid.inc

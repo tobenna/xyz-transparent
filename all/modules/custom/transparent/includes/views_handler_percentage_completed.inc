@@ -69,7 +69,6 @@ function get_percentage_completed($nid){
          ->fieldCondition('field_paid', 'value','1')
          ->addMetaData('account', user_load(1)); // Run the query as user 1.
      $result = $query->execute();
-     $result_keys = [];
      $percentage = 0;
      if (isset($result['node'])) {
         $project_steps = $result['node'];

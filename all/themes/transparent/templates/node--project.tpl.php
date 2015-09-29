@@ -126,12 +126,20 @@
               <td>&#x20A6; <?php echo number_format($node->field_contract_sum['und'][0]['value'], 2, '.', ','); ?></td>
 						</tr>
             <?php 
-              $percentage_remaining = (((100-$percentage)/100) * (float) $node->field_contract_sum['und'][0]['value']);
+              $without_retention = ((((100-$percentage)/100)*0.95) * (float) $node->field_contract_sum['und'][0]['value']);
+              $retention = ((0.05) * (float) $node->field_contract_sum['und'][0]['value']);
+              if(!$node->retention_paid == 1){
+                $amount_due = $without_retention + $retention;
+              }else{
+                $amount_due = $without_retention;
+              }
+              
               ?>
             <tr>
-							<th>AMOUNT DUE (INCL RETENTION)</th>
-              <td>&#x20A6; <?php echo number_format($percentage_remaining, 2, '.', ','); ?> 
-                <?php if($percentage_remaining < 0){
+							<th>AMOUNT DUE (INCL. RETENTION)</th>
+              <td>&#x20A6; <?php 
+                              echo number_format($amount_due, 2, '.', ','); ?> 
+                <?php if($amount_due < 0){
                   echo '<span class="overpaid">(OVERPAID)<span>';
                 }
 ?></td>
