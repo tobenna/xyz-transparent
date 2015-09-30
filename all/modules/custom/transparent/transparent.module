@@ -84,7 +84,7 @@ function transparent_node_presave($node){
       if (!$node->nid == NULL) {
         //Check for appropriate approvals
       if (($node->field_aud1['und'][0]['value'] == '1') && ($node->field_ch1['und'][0]['value'] == '1') &&
-          ($node->original->field_aud1['und'][0]['value'] == '0') && ($node->original->field_ch1['und'][0]['value'] == '1')) {
+          ($node->original->field_aud1['und'][0]['value'] == '1') && ($node->original->field_ch1['und'][0]['value'] == '0')) {
         //Create the project steps
         db_insert('transparent_join_table')
             ->fields([
@@ -443,10 +443,10 @@ function approval_form_submit($form, &$form_state){
         $node->field_aud1['und'][0]['value']
       ];
       if($appr == ['0','0']){
-        $node->field_ch1['und'][0]['value'] = '1';
-        node_save($node);
-      } elseif($appr == ['1','0']){
         $node->field_aud1['und'][0]['value'] = '1';
+        node_save($node);
+      } elseif($appr == ['0','1']){
+        $node->field_ch1['und'][0]['value'] = '1';
         node_save($node);
         set_first_step($node);
       }
@@ -597,12 +597,12 @@ function show_approval_block($apprs,$rids){
 function project_show_approval($apprs, $rids){
   switch ($apprs){
     case '00';
-      if(in_array(get_role_id(["Chairman"])[0], $rids)){
+      if(in_array(get_role_id(["Head Audit"])[0], $rids)){
         return TRUE;
       }
       break;
-    case '10';
-      if(in_array(get_role_id(["Head Audit"])[0], $rids)){
+    case '01';
+      if(in_array(get_role_id(["Chairman"])[0], $rids)){
         
         return TRUE;
       }
@@ -722,10 +722,10 @@ function project_get_status($node){
   $permstring = $node->field_ch1['und'][0]['value'].$node->field_aud1['und'][0]['value'];
   switch ($permstring){
     case '00';
-      $message = "Awaiting approval from Chairman";
+      $message = "Awaiting approval from Audit";
       break;
     case '10';
-      $message = "Awaiting approval from audit";
+      $message = "Awaiting approval from Chairman";
       break;
     case '11';
       $message = "ACTIVE";
