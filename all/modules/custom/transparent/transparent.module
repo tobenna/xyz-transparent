@@ -30,6 +30,20 @@ function transparent_node_insert($node){
   
 }
 /**
+ * Implements hook form alter
+ * Hide the title field when adding images
+ * @param string $form
+ * @param type $form_state
+ * @param type $form_id
+ */
+function transparent_form_alter(&$form, &$form_state, $form_id) {
+  switch ($form_id){
+    case 'project_step_node_form';
+      $form['title']['#access'] = FALSE;
+      break;
+  }
+}
+/**
  * 
  * @param node The node objects
  * @param string The node types
@@ -145,14 +159,7 @@ function transparent_node_view($node){
     case 'project';
       
       break;
-    case 'project_step';
-    
-      //get_current_step($node);
-      //Get the contract sum from the contract sum table.
-//      $project = node_load($node->field_project['und'][0]['nid']);
-//      $node->field_contract_sum['und'][0]['value'] = $project->field_contract_sum['und'][0]['value'];
-//
-      
+    case 'project_step';      
       break;
     default;
       break;
@@ -186,6 +193,15 @@ function transparent_node_validate($node, $form, $form_state){
         form_set_error('field_quarter', '');
         form_set_error('field_year', '');
       }
+     break;
+   case 'project_step';
+     $active = field_get_items('node', $node, 'field_active');
+     if(($active !== FALSE)){
+       if(($active[0]['value'] == '0')){
+         form_set_error('title', 'This Stage is currently locked');
+       }
+     }
+     break;
   }
 }
 /**
@@ -209,7 +225,6 @@ function transparent_node_delete($node){
       ->addMetaData('account', user_load(1)); // Run the query as user 1.
       $result = $query->execute();
       $result_keys = array_keys($result['node']);
-      dpm($result_keys);
       node_delete_multiple($result_keys);
       drupal_set_message('Accompaning retention has been deleted');
       }
@@ -225,75 +240,6 @@ function transparent_node_delete($node){
       break;
   }
 }
-
-
-
-/**
- * Page Callback for project view
- * @param int Project ID
- */
-function transparent_project_view($project_id){
-    $build = [];
-    if(!get_node_id($project_id)== NULL){
-      $node = node_load(get_node_id($project_id));
-      drupal_set_title($node->title);
-      $build['node_display'] = node_view($node);
-      $build['node_display']['#node']->title = NULL;
-      $categroy_id = $node->nid;
-      $query = new EntityFieldQuery();
-      $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'project_step')
-      ->fieldCondition('field_project', 'nid', $categroy_id)
-      ->addMetaData('account', user_load(1)); // Run the query as user 1.
-      $result = $query->execute();
-      $result_keys = array_keys($result['node']);
-      $project_steps = node_load_multiple($result_keys);
-      
-      $build['project_steps'] = node_view_multiple($project_steps);
-      
-      return $build;
-    } else {
-    drupal_not_found();
-    }
-}
-/**
- * Callback function project step view. 
- * @param int Project ID
- * @param int Step ID
- * @return type
- */
-function transparent_project_step_view($project_id, $step_id){
-    
-    //Get the project
-    if(!get_node_id($project_id)== NULL){
-      $node = node_load(get_node_id($project_id));
-      $categroy_id = $node->nid;
-      $query = new EntityFieldQuery();
-      $query->entityCondition('entity_type', 'node')
-      ->entityCondition('bundle', 'project_step')
-      ->fieldCondition('field_project', 'nid', $categroy_id)
-      ->fieldCondition('field_step_number', 'value', $step_id, '=')
-      ->addMetaData('account', user_load(1)); // Run the query as user 1.
-      $result = $query->execute();
-      if (!$result == []){
-        $build = [];
-        $result_keys = array_keys($result['node']);
-        $step = node_load($result_keys[0]);
-        drupal_set_title($node->title . ' '. $step->title);
-        $build['project_step'] = node_view($step);
-        $build['project_step']['#node']->title = NULL;
-        return $build;
-      }
-      else{
-        drupal_not_found();
-      }
-      
-    } else{
-      drupal_not_found();
-    }
-}
-
-
 
 /**
  * Strips the project and removes the backslashes

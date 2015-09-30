@@ -126,6 +126,7 @@ input[type=submit]{
     position: relative;
     transition: top 0.75s ease 0s;
     height: 47px;
+    top: 15px;
     width: 100%;
  }
  #primary-nav a{
@@ -2023,12 +2024,18 @@ div.grid-content span a div.card-style.card div:nth-child(2){
 
 /**TABE **/
 
-.views-field.views-field-field-contract-sum{
+.views-field.views-field-field-contract-sum,.views-field.views-field-amount-paid{
     white-space: nowrap;
     text-align: left;
+    -moz-white-space:normal;
+}
+.views-field.views-field-field-contract-sum div,.views-field.views-field-amount-paid div{
+    white-space: normal;
+    text-align: left;
+    -moz-white-space:normal;
 }
 
-.views-field.views-field-field-contract-sum span{
+.views-field.views-field-field-contract-sum span,.views-field.views-field-amount-paid span{
     float: right;
 }
 
@@ -2042,4 +2049,41 @@ div.grid-content span a div.card-style.card div:nth-child(2){
 
 table tfoot{
     background-color:aliceblue;
+}
+
+#views-aggregator-datatable tfoot > tr > th.views-field {
+    text-align: right;
+}
+.view-id-projects td, .view-id-projects th{
+    border-right: 2px dashed #ccc;
+    border-left: 2px dashed #ccc;
+}
+#views-aggregator-datatable{
+    border: 2px solid #ccc;
+}
+
+#views-aggregator-datatable > tbody > tr > td:nth-child(2){
+    white-space: nowrap;
+}
+
+#edit-field-step-image-und--5-table{
+    width:100%
+}
+.fieldset-wrapper table.sticky-enabled.sticky-table{
+    width:100%
+}
+
+#block-views-step-gallery-block > div.content img{
+    border: 1px solid #ededed;
+    margin-bottom: 0.5rem;
+    background: #fff;
+    color: #000;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    overflow: hidden;
+    margin-right: 15px;
+    height: 128px;
+    margin-top: 5px;
+}
+.view-id-step_gallery{
+    margin-top: 50px;
 }

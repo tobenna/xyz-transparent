@@ -208,7 +208,7 @@ function convert_number_to_words($number) {
     ?>
       <table class='project-table small-12'>
           <tbody>
-            <?php if (!$node->field_date_paid == []): ?>
+            <?php if (isset($node->field_date_paid['und'][0]['value'])): ?>
             <tr>
 							<th>DATE PAID</th>
               <td id="date-paid"><?php   

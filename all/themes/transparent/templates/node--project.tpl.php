@@ -123,10 +123,13 @@
 						</tr>
             <tr>
 							<th>CONTRACT SUM</th>
-              <td>&#x20A6; <?php echo number_format($node->field_contract_sum['und'][0]['value'], 2, '.', ','); ?></td>
+              <td>&#x20A6; <?php 
+              $contract_sum = $node->field_contract_sum['und'][0]['value'];
+              echo 
+              number_format($contract_sum, 2, '.', ','); ?></td>
 						</tr>
             <?php 
-              $without_retention = ((((100-$percentage)/100)*0.95) * (float) $node->field_contract_sum['und'][0]['value']);
+              $without_retention = ((((100-$percentage)/100)*0.95) * (float) $contract_sum);
               $retention = ((0.05) * (float) $node->field_contract_sum['und'][0]['value']);
               if(!$node->retention_paid == 1){
                 $amount_due = $without_retention + $retention;
@@ -135,6 +138,10 @@
               }
               
               ?>
+            <tr>
+							<th>AMOUNT PAID</th>
+              <td >&#x20A6; <?php echo number_format(($contract_sum-$amount_due), 2, '.', ',') ?></td>
+						</tr>
             <tr>
 							<th>AMOUNT DUE (INCL. RETENTION)</th>
               <td>&#x20A6; <?php 

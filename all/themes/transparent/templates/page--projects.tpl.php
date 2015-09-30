@@ -107,15 +107,9 @@
                  <?php print render($page['top_menu1']); ?>
                <?php endif; ?>
 							<div id="account-nav">
-								<ul>
-									<li>
-
-										<a href="/account/login" id="customer_login_link">Account</a>
-
-
-									</li>
-									<li> / </li>
-								</ul>
+								<?php if ($page['top_menu2']): ?>
+                 <?php print render($page['top_menu2']); ?>
+               <?php endif; ?>
 							</div>
 						</nav>
 					</div>
@@ -155,6 +149,13 @@
 				</aside>
 				<!-- END Side Bar Second -->
 			</div>
+          <br>
+					<br>
+      <div class="row large-10">
+        <?php if ($page['content_bottom']): ?>
+          <?php print render($page['content_bottom']); ?>
+        <?php endif; ?>
+      </div>
 			<!-- End Main -->
 		</div>
 	</div>
