@@ -112,7 +112,7 @@ function transparent_node_presave($node){
           $new_node->field_step_number = $single_node->field_step_number;
           $new_node->field_project[$node->language][0]['nid'] = $node->nid;
           $new_node->body = $single_node->body;
-          $new_node->uid = $user->uid;
+          $new_node->uid = 1;
           $new_node->comment = 0;
           $new_node->status = 1;
           $new_node->promote = 0;
@@ -138,7 +138,7 @@ function transparent_node_presave($node){
         $retention_node->field_value_added_tax = $retention->field_value_added_tax;
         $retention_node->field_project[$node->language][0]['nid'] = $node->nid;
         $retention_node->body = $single_node->body;
-        $retention_node->uid = $user->uid;
+        $retention_node->uid = 1;
         $retention_node->comment = 0;
         $retention_node->status = 1;
         $retention_node->promote = 0;

@@ -23,6 +23,7 @@ regions[sidebar] = Sidebar
 regions[top_menu1] = Top Menu 1
 regions[top_menu2] = Top Menu 2
 regions[content_bottom] = Content Bottom
+regions[content_top] = Content Top
 
 
 
