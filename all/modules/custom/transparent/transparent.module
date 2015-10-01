@@ -812,12 +812,44 @@ function retention_paid($node){
 }
 
 
+
 /**
- * Sandbox For New User Creation Features
- * if user is of type A create User of Type B.
+ * Implements hook_user_insert().
+ * @global type $user
+ * @param type $edit
+ * @param type $account
+ * @param type $category
+ * Attach roles to the users created depending on the Role of the User Creating.
  */
 
-function transparent_user_insert($edit, $account, $category){
-  dpm($edit);
+function transparent_user_insert(&$edit, $account, $category){
+  global $user;
+  $roles = array_keys($user->roles);
+  foreach ($roles as $role_id) {
+    switch ($role_id){
+      case array_search('Head PRS', user_roles());
+        //PRS
+        $rid = array_search('PRS', user_roles());
+        $account->roles[$rid] = 'PRS';
+        break;
+      case array_search('Head Accounts', user_roles());
+        //Accounts
+        $rid = array_search('Accounts', user_roles());
+        $account->roles[$rid] = 'Accounts';
+        break;
+      case array_search('Head Engineering', user_roles());
+        //Engineering
+        $rid = array_search('Engineering', user_roles());
+        $account->roles[$rid] = 'Engineering';
+        break;
+      case array_search('Head Audit', user_roles());
+        //Audit
+        $rid = array_search('Audit', user_roles());
+        $account->roles[$rid] = 'Audit';
+        break;
+      default;
+        break;
+    }
+  }
 }
 

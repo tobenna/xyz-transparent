@@ -100,7 +100,7 @@
 				<div class="show-for-large-up" id="desktop-nav">
 					<div class="row">
 						<div class="logo-div">
-							<img id="logo" src="<?php echo base_path(); ?>sites/all/themes/transparent/assets/img/logo-dark.svg">
+							<a title="Transparent" href="<?php echo base_path();?>"><img src="<?php echo base_path(); ?>sites/all/themes/transparent/assets/img/logo-dark.svg"></a>
 						</div>
 						<nav id="primary-nav">
 							<?php if ($page['top_menu1']): ?>
