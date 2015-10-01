@@ -810,3 +810,14 @@ function retention_paid($node){
         }
         return $paid;
 }
+
+
+/**
+ * Sandbox For New User Creation Features
+ * if user is of type A create User of Type B.
+ */
+
+function transparent_user_insert($edit, $account, $category){
+  dpm($edit);
+}
+

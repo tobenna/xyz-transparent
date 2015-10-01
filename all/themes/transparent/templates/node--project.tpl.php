@@ -157,10 +157,16 @@
 						</tr>
           </tbody>
       </table>
+      <?php if (isset($node->field_award_certificate['und']['0']['uri'])): ?>
+      <?php 
+        $path_uri = $node->field_award_certificate['und']['0']['uri'];
+         $path_to_file = file_create_url($path_uri); ?>
+         <a target="_blank" href="<?php echo $path_to_file ?>"> <img src="<?php echo base_path()?>sites/all/themes/transparent/assets/img/download.png"> &nbsp; DOWNLOAD AWARD CERTIFICATE </a>
+      <?php endif; ?>
   </div>
 
   <?php 
-   print render($content['links']);
+    print render($content['links']);
   ?>
 
 </div>
