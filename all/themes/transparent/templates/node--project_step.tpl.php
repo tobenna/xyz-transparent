@@ -81,6 +81,24 @@
  */
 ?>
 <?php 
+function get_naira_values($number){
+  if(strpos($number, '.') !== false){
+    list($whole, $decimal) = explode('.', $number);
+  }else{
+    $whole = $number;
+    $decimal = '';
+  }
+	$whole_words = convert_number_to_words($whole) . ' NAIRA';
+  if($decimal !== ''){ 
+    $decimal = (int) $decimal;
+    $decimal = (string) $decimal;
+    $decimal_words = ', ' . convert_number_to_words($decimal) . ' KOBO';
+  }else{
+    $decimal_words = '';
+  }
+  return $whole_words . $decimal_words;
+}
+
 function convert_number_to_words($number) {
     
     $hyphen      = '-';
@@ -88,7 +106,7 @@ function convert_number_to_words($number) {
     $separator   = ', ';
     $negative    = 'negative ';
     $decimal     = ' point ';
-    $dictionary  = array(
+    $dictionary  = [
         0                   => 'zero',
         1                   => 'one',
         2                   => 'two',
@@ -124,7 +142,7 @@ function convert_number_to_words($number) {
         1000000000000       => 'trillion',
         1000000000000000    => 'quadrillion',
         1000000000000000000 => 'quintillion'
-    );
+        ];
     
     if (!is_numeric($number)) {
         return false;
@@ -257,7 +275,7 @@ function convert_number_to_words($number) {
 						</tr>
             <tr>
 							<th>IN WORDS</th>
-              <td class="in-words"><?php echo convert_number_to_words($amount_due); ?> NAIRA</td>
+              <td class="in-words"><?php echo get_naira_values($amount_due); ?></td>
 						</tr>
             <tr>
 							<th>STATUS</th>

@@ -1,5 +1,3 @@
-/*@import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
-*/
 img { 
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -42,7 +40,7 @@ td.hover-row:hover{
 
 * {
     outline: none;
-    font-family: "proxima-nova",'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: "proxima-nova", 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .main {
@@ -2124,4 +2122,12 @@ div.view-content > table.views-table.cols-0{
 
 input[type=submit][value=Remove]{
     width:100%;
+}
+
+span.views-label.views-label-rid{
+    font-weight: bold;
+}
+
+div.feed-icon > a{
+    margin-right: 10px;
 }
