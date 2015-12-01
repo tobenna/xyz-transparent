@@ -81,6 +81,7 @@
  */
 ?>
 <?php 
+dpm($node);
 function get_naira_values($number){
   if(strpos($number, '.') !== false){
     list($whole, $decimal) = explode('.', $number);

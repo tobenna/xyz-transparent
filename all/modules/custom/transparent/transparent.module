@@ -144,8 +144,30 @@ function transparent_node_presave($node){
         $retention_node->promote = 0;
         node_save($retention_node);
       }
-      break;
       }
+      break;
+    case 'project_step';
+      $paid = $node->original->field_paid['und'][0]['value'];
+      if($paid == '1'){
+        if($node->original->field_percentage_of_total['und'][0]['value'] !== '0.00' ){
+            $pv_node = new stdClass();
+            $pv_node->type = "payment_voucher";
+            $pv_node->title = "Net Pay";
+        }
+        if($node->original->field_withholding_tax['und'][0]['value'] !== '0.00'){
+            $pv_node = new stdClass();
+            $pv_node->type = "payment_voucher";
+            $pv_node->title = "With Holding Tax";
+        }
+        if($node->original->field_value_added_tax['und'][0]['value'] !== '0.00'){
+            $pv_node = new stdClass();
+            $pv_node->type = "payment_voucher";
+            $pv_node->title = "Value Added Tax";
+        }
+            
+      }
+      break;
+      
       
   }
 }
