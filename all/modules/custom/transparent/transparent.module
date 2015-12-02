@@ -1,6 +1,16 @@
 <?php
 
 /**
+ * Print Functionality
+ */
+
+/**
+ * Implements hook_menu().
+ * 
+ */
+
+
+/**
  * 
  * Implements hook_node_insert().
  * @param node the node before its saved.
@@ -150,19 +160,40 @@ function transparent_node_presave($node){
       $paid = $node->original->field_paid['und'][0]['value'];
       if($paid == '1'){
         if($node->original->field_percentage_of_total['und'][0]['value'] !== '0.00' ){
+            $project = node_load($node->original->field_project['und'][0]['nid']);
+            $payment_category_id = $project->field_project_category;
+            $payment_category = node_load($payment_category_id['und'][0]['nid']);
+            $category_code = $payment_category->field_category_code['und'][0]['value'];
+            $old_node = $node->original;
             $pv_node = new stdClass();
             $pv_node->type = "payment_voucher";
             $pv_node->title = "Net Pay";
+            $pv_node->language = LANGUAGE_NONE;
+            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project);
         }
         if($node->original->field_withholding_tax['und'][0]['value'] !== '0.00'){
+            $project = node_load($node->original->field_project['und'][0]['nid']);
+            $payment_category_id = $project->field_project_category;
+            $payment_category = node_load($payment_category_id['und'][0]['nid']);
+            $category_code = $payment_category->field_category_code['und'][0]['value'];
+            $old_node = $node->original;
             $pv_node = new stdClass();
             $pv_node->type = "payment_voucher";
             $pv_node->title = "With Holding Tax";
+            $pv_node->language = LANGUAGE_NONE;
+            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project);
         }
         if($node->original->field_value_added_tax['und'][0]['value'] !== '0.00'){
+            $project = node_load($node->original->field_project['und'][0]['nid']);
+            $payment_category_id = $project->field_project_category;
+            $payment_category = node_load($payment_category_id['und'][0]['nid']);
+            $category_code = $payment_category->field_category_code['und'][0]['value'];
+            $old_node = $node->original;  
             $pv_node = new stdClass();
             $pv_node->type = "payment_voucher";
             $pv_node->title = "Value Added Tax";
+            $pv_node->language = LANGUAGE_NONE;
+            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project);
         }
             
       }
@@ -875,3 +906,23 @@ function transparent_user_insert(&$edit, $account, $category){
   }
 }
 
+/**
+ * Helper function for creating payment vouchers
+ */
+
+function create_payment_voucher($node,$old_node, $pv_node, $category_code, $project){
+      node_object_prepare($pv_node);
+      $pv_node->body = $old_node->body;
+      $pv_node->field_a_c_code[LANGUAGE_NONE][0]['value'] = $category_code; 
+      $pv_node->field_voucher_number[LANGUAGE_NONE][0]['value'] = generate_pvnumber($category_code);
+      $pv_node->field_contractor = $project->field_contractor;
+      $pv_node->field_project = $old_node->field_project;
+      $pv_node->field_project_category = $project->field_project_category;
+      $pv_node->field_date_generated = time();
+      $pv_node->field_payment_reference[$node->language][0]['nid'] = $node->nid;
+      $pv_node->uid = 1;
+      $pv_node->comment = 0;
+      $pv_node->status = 1;
+      $pv_node->promote = 0;
+      node_save($pv_node);
+}
