@@ -28,29 +28,6 @@ function transparent_uninstall(){
 function transparent_schema() {
   //Create index last value inserted variable
   $schema = transparent_create_join_table('transparent_join_table');
-  $schema['transparent_pv_table'] = [
-    'description' => 'Keeps track of the created performance voucher numbers',
-    'fields' => [
-      'p_nid' => [
-        'description' => 'The {node}.id of the project steps',
-        'type' => 'int',
-        'not null' => FALSE,
-        ],
-      'pv_number' => [
-        'description' => 'The the generated performance voucher for the payment.',
-        'type' => 'varchar',
-        'length' => '255',
-        'not null' => FALSE,
-        ],
-      'tax_name' => [
-        'description' => 'the name of the taxed item.',
-        'type' => 'varchar',
-        'length' => '255',
-        'not null' => FALSE,
-      ],
-      ],
-  ];
-  
   return $schema;
 }
 

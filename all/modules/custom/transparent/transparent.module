@@ -21,18 +21,6 @@ function transparent_node_insert($node){
     case 'project';
     break;
     case 'project_step';
-      //Create PV numbers and add to pv table
-      $project_id = $node->field_project['und'][0]['nid'];
-      $project = node_load($project_id);      
-      $id_category = $project->field_project_category['und'][0]['nid'];
-      $category = node_load($id_category);
-      $category_code = $category->field_category_code['und'][0]['value'];
-      db_insert('transparent_pv_table')
-          ->fields([
-          'p_nid' => $node->nid,
-          'pv_number' => generate_pvnumber($category_code),
-          'tax_name' => $node->title])
-          ->execute();
       break;
     default;  
       break;
