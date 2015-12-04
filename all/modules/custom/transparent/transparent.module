@@ -9,6 +9,9 @@
  * 
  */
 
+function transparent_menu(){
+  
+}
 
 /**
  * 
@@ -148,6 +151,7 @@ function transparent_node_presave($node){
       $paid = $node->original->field_paid['und'][0]['value'];
       if($paid == '1'){
         if($node->original->field_percentage_of_total['und'][0]['value'] !== '0.00' ){
+            (float) $percentage_total = $node->original->field_percentage_of_total['und'][0]['value'];
             $project = node_load($node->original->field_project['und'][0]['nid']);
             $payment_category_id = $project->field_project_category;
             $payment_category = node_load($payment_category_id['und'][0]['nid']);
@@ -157,9 +161,19 @@ function transparent_node_presave($node){
             $pv_node->type = "payment_voucher";
             $pv_node->title = "Net Pay";
             $pv_node->language = LANGUAGE_NONE;
-            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project);
+            $amount_due = ($percentage_total/100) * 0.95* (float)($node->original->contract_sum);
+            $contractor = node_load($project->field_contractor['und'][0]['nid']);
+            
+            //Add the beneficiary information to the 
+            $payee = [
+                   'pname' => $contractor->title,
+                   'paddr' => $contractor->field_address_of_organization['und'][0]['value'],
+                   'amount'=> number_format((string) ($amount_due), 2, '.', ',')
+            ];
+            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project,$payee);
         }
         if($node->original->field_withholding_tax['und'][0]['value'] !== '0.00'){
+            (float) $percentage_total = $node->original->field_withholding_tax['und'][0]['value'];
             $project = node_load($node->original->field_project['und'][0]['nid']);
             $payment_category_id = $project->field_project_category;
             $payment_category = node_load($payment_category_id['und'][0]['nid']);
@@ -169,9 +183,16 @@ function transparent_node_presave($node){
             $pv_node->type = "payment_voucher";
             $pv_node->title = "With Holding Tax";
             $pv_node->language = LANGUAGE_NONE;
-            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project);
+            $amount_due = ($percentage_total/100) * 0.95* (float)($node->original->contract_sum);
+            $payee = [
+                   'pname' => 'Board of Internal Revenue',
+                   'paddr' => 'Number 28 Internal Revue Road, Independence Layout Enugu', /** * @todo Fix this address*/
+                   'amount' => number_format((string) ($amount_due), 2, '.', ',')
+            ];
+            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project,$payee);
         }
         if($node->original->field_value_added_tax['und'][0]['value'] !== '0.00'){
+            (float) $percentage_total = $node->original->field_value_added_tax['und'][0]['value'];
             $project = node_load($node->original->field_project['und'][0]['nid']);
             $payment_category_id = $project->field_project_category;
             $payment_category = node_load($payment_category_id['und'][0]['nid']);
@@ -181,12 +202,84 @@ function transparent_node_presave($node){
             $pv_node->type = "payment_voucher";
             $pv_node->title = "Value Added Tax";
             $pv_node->language = LANGUAGE_NONE;
-            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project);
+            $amount_due = ($percentage_total/100) * 0.95* (float)($node->original->contract_sum);
+            $payee = [
+                   'pname' => 'Board of Internal Revenue',
+                   'paddr' => 'Number 28 Internal Revue Road, Independence Layout Enugu', /** * @todo Fix this address*/
+                   'amount' => number_format((string) ($amount_due), 2, '.', ',')
+            ];
+            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project,$payee);
         }
             
       }
       break;
       
+      case 'retention';
+      $paid = $node->original->field_paid['und'][0]['value'];
+      if($paid == '1'){
+        if($node->original->field_percentage_of_total['und'][0]['value'] !== '0.00' ){
+            (float) $percentage_total = $node->original->field_percentage_of_total['und'][0]['value'];
+            $project = node_load($node->original->field_project['und'][0]['nid']);
+            $payment_category_id = $project->field_project_category;
+            $payment_category = node_load($payment_category_id['und'][0]['nid']);
+            $category_code = $payment_category->field_category_code['und'][0]['value'];
+            $old_node = $node->original;
+            $pv_node = new stdClass();
+            $pv_node->type = "payment_voucher";
+            $pv_node->title = "Net Pay";
+            $pv_node->language = LANGUAGE_NONE;
+            $amount_due = ($percentage_total/100) * 0.95* (float)($node->original->contract_sum);
+            $contractor = node_load($project->field_contractor['und'][0]['nid']);
+            
+            //Add the beneficiary information to the 
+            $payee = [
+                   'pname' => $contractor->title,
+                   'paddr' => $contractor->field_address_of_organization['und'][0]['value'],
+                   'amount'=> number_format((string) ($amount_due), 2, '.', ',')
+            ];
+            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project,$payee);
+        }
+        if($node->original->field_withholding_tax['und'][0]['value'] !== '0.00'){
+            (float) $percentage_total = $node->original->field_withholding_tax['und'][0]['value'];
+            $project = node_load($node->original->field_project['und'][0]['nid']);
+            $payment_category_id = $project->field_project_category;
+            $payment_category = node_load($payment_category_id['und'][0]['nid']);
+            $category_code = $payment_category->field_category_code['und'][0]['value'];
+            $old_node = $node->original;
+            $pv_node = new stdClass();
+            $pv_node->type = "payment_voucher";
+            $pv_node->title = "With Holding Tax";
+            $pv_node->language = LANGUAGE_NONE;
+            $amount_due = ($percentage_total/100) * 0.95* (float)($node->original->contract_sum);
+            $payee = [
+                   'pname' => 'Board of Internal Revenue',
+                   'paddr' => 'Number 28 Internal Revue Road, Independence Layout Enugu', /** * @todo Fix this address*/
+                   'amount' => number_format((string) ($amount_due), 2, '.', ',')
+            ];
+            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project,$payee);
+        }
+        if($node->original->field_value_added_tax['und'][0]['value'] !== '0.00'){
+            (float) $percentage_total = $node->original->field_value_added_tax['und'][0]['value'];
+            $project = node_load($node->original->field_project['und'][0]['nid']);
+            $payment_category_id = $project->field_project_category;
+            $payment_category = node_load($payment_category_id['und'][0]['nid']);
+            $category_code = $payment_category->field_category_code['und'][0]['value'];
+            $old_node = $node->original;  
+            $pv_node = new stdClass();
+            $pv_node->type = "payment_voucher";
+            $pv_node->title = "Value Added Tax";
+            $pv_node->language = LANGUAGE_NONE;
+            $amount_due = ($percentage_total/100) * 0.95* (float)($node->original->contract_sum);
+            $payee = [
+                   'pname' => 'Board of Internal Revenue',
+                   'paddr' => 'Number 28 Internal Revue Road, Independence Layout Enugu', /** * @todo Fix this address*/
+                   'amount' => number_format((string) ($amount_due), 2, '.', ',')
+            ];
+            create_payment_voucher($node, $old_node, $pv_node, $category_code, $project,$payee);
+        }
+            
+      }
+      break;
       
   }
 }
@@ -898,12 +991,14 @@ function transparent_user_insert(&$edit, $account, $category){
  * Helper function for creating payment vouchers
  */
 
-function create_payment_voucher($node,$old_node, $pv_node, $category_code, $project){
+function create_payment_voucher($node,$old_node, $pv_node, $category_code, $project,$payee){
       node_object_prepare($pv_node);
       $pv_node->body = $old_node->body;
       $pv_node->field_a_c_code[LANGUAGE_NONE][0]['value'] = $category_code; 
       $pv_node->field_voucher_number[LANGUAGE_NONE][0]['value'] = generate_pvnumber($category_code);
-      $pv_node->field_contractor = $project->field_contractor;
+      $pv_node->field_payee['und'][0]['value'] = $payee['pname'];
+      $pv_node->field_amount['und'][0]['value'] = $payee['amount'];
+      $pv_node->field_address_of_organization['und'][0]['value'] = $payee['paddr'];
       $pv_node->field_project = $old_node->field_project;
       $pv_node->field_project_category = $project->field_project_category;
       $pv_node->field_date_generated = time();
