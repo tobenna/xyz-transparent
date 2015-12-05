@@ -49,7 +49,8 @@ function transparent_print_view($nid){
         }
         break;
       case 'payment_voucher';
-        print('Under Construction'); // Fill this in..
+        $trans_var = transparent_print_prepare($to_print);
+        print theme('transparent_voucher_template', $trans_var);
         break;
       default;
         drupal_access_denied();
@@ -68,6 +69,11 @@ function transparent_theme(){
       'path'       => drupal_get_path('module', 'transparent') .'/templates',
       'arguments'  => [],
     ],
+    'transparent_voucher_template' => [
+      'template'   => 'voucher',
+      'path'       => drupal_get_path('module', 'transparent') .'/templates',
+      'arguments'  => [],
+    ],
   ];
   return $themes;
 }
@@ -79,6 +85,7 @@ function transparent_theme(){
  */
 
 function transparent_print_prepare($to_print){
+  if($to_print->type == 'project_step' || $to_print->type == 'retention'){
   $project = node_load($to_print->field_project['und'][0]['nid']);
   $contractor = node_load($project->field_contractor['und'][0]['nid']);
   $contract_sum = (float) $project->field_contract_sum['und'][0]['value'];
@@ -107,7 +114,25 @@ function transparent_print_prepare($to_print){
     'path'              => base_path() . drupal_get_path('module', 'transparent') .'/templates/certificate/'
   ];
   return $trans_var;
-  
+  }elseif($to_print->type == "payment_voucher"){
+    $project = node_load($to_print->field_project['und'][0]['nid']);
+    $voucher_num = str_replace('-', '/', $to_print->field_voucher_number['und'][0]['value']);
+    $amount = $to_print->field_amount['und'][0]['value'];
+    $trans_var = [
+      'pv_num'            => 'ENSUBEB'. '/'. '240201'.'/'. $voucher_num,
+      'lot_no'            => $project->title,
+      'payment_type'      => $to_print->title,
+      'payee'             => $to_print->field_payee['und'][0]['value'],
+      'address'           => $to_print->field_address_of_organization['und'][0]['value'],
+      'project_title'     => $project->field_title['und'][0]['safe_value'],
+      'details'           => $to_print->body['und'][0]['safe_value'],
+      'amount'            => $amount,
+      'date_generated'    => $to_print->field_date_generated['und'][0]['value'],
+      'tracking_code'     => '240201'.'/'. $voucher_num,
+      'path'              => base_path() . drupal_get_path('module', 'transparent') .'/templates/certificate/'
+    ];
+    return $trans_var;
+  }
 }
 
 
@@ -1099,7 +1124,7 @@ function create_payment_voucher($node,$old_node, $pv_node, $category_code, $proj
       $pv_node->field_address_of_organization['und'][0]['value'] = $payee['paddr'];
       $pv_node->field_project = $old_node->field_project;
       $pv_node->field_project_category = $project->field_project_category;
-      $pv_node->field_date_generated = time();
+      $pv_node->field_date_generated['und'][0]['value'] = time();
       $pv_node->field_payment_reference[$node->language][0]['nid'] = $node->nid;
       $pv_node->uid = 1;
       $pv_node->comment = 0;
