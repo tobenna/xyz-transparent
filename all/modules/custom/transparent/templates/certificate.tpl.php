@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <a id="print-link" href="javascript:window.print()">Print this page</a>
+    <a id="print-link" href="javascript:window.print()"><img src="<?php echo $variables['path'] . 'img/print.png';?>"/> &nbsp; Print this page</a>
   <!-- Top Line-->
   <div class="row small-12 top-logos">
     <img src="<?php echo $variables['path'] . 'img/ens-logo.png'?>" alt="ens-logo" />
@@ -106,7 +106,7 @@
         <strong>Certificate</strong>
       </p>
       <p>
-        It is certified that the above information is correct and was incrred under the relevant financial authority or other regulations
+        It is certified that the above information is correct and was incurred under the relevant financial authority or other regulations
         quoted that services have been dully performed and that the rate/price charge is according to regulations/contract,
         fair and reasonable.
       </p>
@@ -117,7 +117,7 @@
       </p>
       <p>
         <ul>
-          <li>Finance Departmant would deduct all necessary taxes and VAT directly from the contractor money(s) before payment
+          <li>Finance Department would deduct all necessary taxes and VAT directly from the contractor money(s) before payment
           </li>
           <li>Retention monies are to placed in the retention deposit amount</li>
         </ul>
