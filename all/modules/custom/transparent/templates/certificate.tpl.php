@@ -46,6 +46,10 @@
         <th>Site Location</th>
         <td class="focus text-wrap"><?php echo $variables['site_location']?></td>
       </tr>
+      <tr>
+        <th>Date Generated</th>
+        <td class=""><?php echo $variables['date_paid']?></td>
+      </tr>
     </tbody>
   </table>
   <hr>

@@ -111,7 +111,8 @@ function transparent_print_prepare($to_print){
     'value_prev'        => number_format((string) ($previous_work), 2, '.', ','),
     'amount_due'        => number_format((string) ($value_of_work - $previous_work), 2, '.', ','),
     'pc_number'         => 'ENSUBEB' . '/PC/' . substr($to_print->title, 0, 3) .'/'. $project->title,
-    'path'              => base_path() . drupal_get_path('module', 'transparent') .'/templates/certificate/'
+    'path'              => base_path() . drupal_get_path('module', 'transparent') .'/templates/certificate/',
+    'date_paid'         => format_date($to_print->field_date_paid['und'][0]['value'], 'short')
   ];
   return $trans_var;
   }elseif($to_print->type == "payment_voucher"){
@@ -127,7 +128,7 @@ function transparent_print_prepare($to_print){
       'project_title'     => $project->field_title['und'][0]['safe_value'],
       'details'           => $to_print->body['und'][0]['safe_value'],
       'amount'            => $amount,
-      'date_generated'    => $to_print->field_date_generated['und'][0]['value'],
+      'date_generated'    => format_date($to_print->field_date_generated['und'][0]['value'], 'short'),
       'tracking_code'     => '240201'.'/'. $voucher_num,
       'path'              => base_path() . drupal_get_path('module', 'transparent') .'/templates/certificate/'
     ];
