@@ -1,0 +1,186 @@
+#cn-flag{
+	height: 12px;
+	margin-bottom:3px;
+}
+body > div > span {
+	font-size: 12px;
+}
+
+.top-logos img{
+	height: 82px;
+}
+
+.seal{
+	float: right;
+}
+
+body{
+	margin: 28px;
+	max-width: 700px;
+}
+
+.top-logos{
+	padding-bottom: 2px;
+}
+
+.page-title{
+	text-align: center;
+	font-weight: 500;
+	font-size: 25px;
+	padding: 10px;
+	border-bottom: 1px solid #ccc;
+	border-top:    1px solid #ccc;
+}
+
+.main-data{
+	width: 100%;
+	border:none;
+	margin-top: 10px;
+}
+
+.print-prompt p{
+	font-size: 10px;
+	margin-top: 8px;
+}
+
+.main-data td, .main-data th, .main-data tr{
+	font-size: 12px;
+	white-space: nowrap;
+	font-weight: normal;
+	vertical-align: top;
+}
+
+.center-text{
+	text-align: center;
+}
+
+.footer-note{
+	font-size: 10px;
+	bottom: 10px;
+}
+
+.footer-note span{
+	font-size: 10px;
+}
+
+table tr td.focus{
+	width: 70%;
+	font-weight: bold;
+}
+table tr th, table tr td{
+	padding: 0.1rem 0.35rem;
+}
+
+table tr.even, table tr.alt, table tr:nth-of-type(even) {
+	background: none;
+}
+
+hr{
+	border-width: 1px;
+	border-color: #5E5E5E;
+}
+
+.payment-summary th, .payment-summary td{
+	font-size: 12px;
+}
+
+.payment-summary{
+	border: none;
+	width: 40%;
+	float: left;
+	margin-top: 20px;
+}
+.payment-summary.cert{
+	border: none;
+	width: 50%;
+	float: left;
+	margin-top: 20px;
+}
+
+.payment-summary th{
+	width: 45%;
+}
+
+.payment-summary td{
+	text-align: right;
+}
+
+.payment-summary.cert th{
+	width: 65%;
+}
+
+.qr-code.cert{
+	text-align: center;
+	font-size: 10px;
+	width: 50%;
+	float: right;
+}
+
+
+
+.tracking td, .tracking th{
+	border-bottom: 1px dashed #5E5E5E;
+	border-top:    1px dashed #5E5E5E;
+}
+
+.qr-code{
+	text-align: center;
+	font-size: 10px;
+	width: 60%;
+	float: right;
+}
+.qr-image{
+	margin-bottom: 10px;
+}
+
+.qr-footer{
+	padding-left: 40px;
+	padding-right: 40px;
+}
+
+.disclaimer{
+	width: 50%;
+	margin-bottom: 20px;
+}
+.disclaimer p{
+	margin: 0px;
+	font-size: 8px;
+}
+.disclaimer ul li{
+	margin: 0px;
+	font-size: 8px;
+}
+.disclaimer ul{
+	font-size: 8px;
+}
+
+.right{
+	float: right;
+	padding-left: 20px;
+}
+.left{
+	float: left;
+	padding-right: 20px;
+}
+
+footer{
+	width: 100%;
+}
+
+footer img{
+	position: absolute;
+	bottom: 0px;
+}
+
+.main-data td.text-wrap{
+	white-space: normal;
+}
+
+@media print {
+    html, body {
+        height: 90%;    
+    }
+    #print-link{
+        display: none;
+    }
+}

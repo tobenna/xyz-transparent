@@ -10,8 +10,106 @@
  */
 
 function transparent_menu(){
+  $items['certificate/%/print'] = [
+    'page callback'       => 'transparent_print_view',
+    'page arguments'      => [1],
+    'access arguments'    => ['access content'],
+    'type'                => MENU_CALLBACK,
+  ];
+  $items['voucher/%/print'] = [
+    'page callback'       => 'transparent_print_view',
+    'page arguments'      => [1],
+    'access arguments'    => ['access content'],
+    'type'                => MENU_CALLBACK,
+  ];
+  
+  return $items;
+}
+
+function transparent_print_view($nid){
+  $to_print = node_load($nid);
+  if($to_print != FALSE){
+    switch ($to_print->type){
+      case 'project_step';
+        $permstring = project_step_get_permission_string($to_print);
+        if($permstring == '11110' || $permstring == '11111'){
+          $trans_var = transparent_print_prepare($to_print);
+          print theme('transparent_certificate_template', $trans_var);
+        } else{
+          drupal_access_denied();
+        }
+        break;
+        case 'retention';
+        $permstring = project_step_get_permission_string($to_print);
+        if($permstring == '11110' || $permstring == '11111'){
+          $trans_var = transparent_print_prepare($to_print);
+          print theme('transparent_certificate_template', $trans_var);
+        } else{
+            drupal_access_denied();
+        }
+        break;
+      case 'payment_voucher';
+        print('Under Construction'); // Fill this in..
+        break;
+      default;
+        drupal_access_denied();
+        break;
+    }
+  }
+  else{
+    drupal_access_denied();
+  }
+}
+
+function transparent_theme(){
+  $themes = [
+    'transparent_certificate_template' => [
+      'template'   => 'certificate',
+      'path'       => drupal_get_path('module', 'transparent') .'/templates',
+      'arguments'  => [],
+    ],
+  ];
+  return $themes;
+}
+
+
+/**
+ * Helper function to aid the generation of print views
+ * 
+ */
+
+function transparent_print_prepare($to_print){
+  $project = node_load($to_print->field_project['und'][0]['nid']);
+  $contractor = node_load($project->field_contractor['und'][0]['nid']);
+  $contract_sum = (float) $project->field_contract_sum['und'][0]['value'];
+  $retention = $contract_sum * 0.05;
+  $contract_sum_less_ret = $contract_sum - $retention;
+  $completion_status = get_completion_status($project);
+  $percentage_of = (float) $to_print->field_percentage_of_total['und'][0]['value'];
+  $value_of_work = ($completion_status/100) * $contract_sum_less_ret;
+  $previous_work = (($completion_status - $percentage_of)/100) * $contract_sum_less_ret;
+  
+  $trans_var = [
+    'title'             => $to_print->title,
+    'lot_no'            => $project->title,
+    'project_title'     => $project->field_title['und'][0]['safe_value'],
+    'contractor_name'   => $contractor->title,
+    'site_location'     => $project->field_address_of_project['und'][0]['safe_value'],
+    'contract_sum'      => number_format((string) ($contract_sum), 2, '.', ','),
+    'retention'         => number_format((string) ($retention), 2, '.', ','),
+    'less_retention'    => number_format((string) ($contract_sum_less_ret), 2, '.', ','),
+    'completion_status' => number_format((string) ($completion_status), 2, '.', ','),
+    'percentage_prev'   => number_format((string) ($completion_status - $percentage_of), 2, '.', ','),
+    'value_of_work'     => number_format((string) ($value_of_work), 2, '.', ','),
+    'value_prev'        => number_format((string) ($previous_work), 2, '.', ','),
+    'amount_due'        => number_format((string) ($value_of_work - $previous_work), 2, '.', ','),
+    'pc_number'         => 'ENSUBEB' . '/PC/' . substr($to_print->title, 0, 3) .'/'. $project->title,
+    'path'              => base_path() . drupal_get_path('module', 'transparent') .'/templates/certificate/'
+  ];
+  return $trans_var;
   
 }
+
 
 /**
  * 
