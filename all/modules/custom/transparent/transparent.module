@@ -195,7 +195,7 @@ function transparent_node_load($nodes, $types){
 }
 /**
  * Checking for appropriate Checks 
- * Create complete complete project_steps from templete_steps.
+ * Create complete project_steps from templete_steps.
  * 
  * Implements hook_node_presave().
  * @param type $node
@@ -272,7 +272,11 @@ function transparent_node_presave($node){
       }
       break;
     case 'project_step';
+    if(!$node->is_new){
       $paid = $node->original->field_paid['und'][0]['value'];
+    } else{
+      $paid = 0;
+    }
       if($paid == '1'){
         if($node->original->field_percentage_of_total['und'][0]['value'] !== '0.00' ){
             (float) $percentage_total = $node->original->field_percentage_of_total['und'][0]['value'];
@@ -339,7 +343,12 @@ function transparent_node_presave($node){
       break;
       
       case 'retention';
-      $paid = $node->original->field_paid['und'][0]['value'];
+      if(!$node->is_new){
+         $paid = $node->original->field_paid['und'][0]['value'];
+      }else{
+        $paid = '0';
+      }
+     
       if($paid == '1'){
         if($node->original->field_percentage_of_total['und'][0]['value'] !== '0.00' ){
             (float) $percentage_total = $node->original->field_percentage_of_total['und'][0]['value'];

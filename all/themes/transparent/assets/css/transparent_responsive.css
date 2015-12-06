@@ -183,7 +183,7 @@ input[type=submit]{
 
 /**Mobile */
 #DrawerMenu {
-    background: #fff;
+    background: #354149;
 }
 
 #DrawerMenu lh {
@@ -194,6 +194,15 @@ input[type=submit]{
     display: block;
     margin-bottom: 12px;
 }
+#DrawerMenu a{
+  color: white;
+}
+
+#DrawerMenu a.active{
+  color: white;
+  font-weight: bolder;
+}
+
 
 #DrawerMenu ul li {
     list-style: none; 
@@ -2094,9 +2103,8 @@ table tfoot{
     text-align: center;
     text-decoration: none;
     white-space: nowrap;
-    background-color: #008CBA;
+    background-color: #EEE;
     border: 1px solid #ffffff;
-    background: #fff;
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     overflow: hidden;
     margin-bottom: 10px;
@@ -2146,9 +2154,13 @@ div.feed-icon > a{
     position: relative;
     text-align: center;
     text-decoration: none;
-    background-color: #008CBA;
-    border: 1px solid #ffffff;
     background: #fff;
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     margin-bottom: 10px;
+}
+
+div.download-link{
+  font-weight: bolder;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
