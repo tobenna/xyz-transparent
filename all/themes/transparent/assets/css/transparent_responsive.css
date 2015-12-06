@@ -2089,14 +2089,13 @@ table tfoot{
 .new-label{
     font-family: proxima-nova, "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif !important;
     font-weight: normal;
-    line-height: 1;
     margin-bottom: auto;
     position: relative;
     text-align: center;
     text-decoration: none;
     white-space: nowrap;
     background-color: #008CBA;
-    border: 1px solid #ededed;
+    border: 1px solid #ffffff;
     background: #fff;
     box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     overflow: hidden;
@@ -2137,5 +2136,19 @@ div.feed-icon > a{
     padding: 8px;
 }
 .row.new-label{
+    margin-bottom: 10px;
+}
+
+.project-table  {
+    font-family: proxima-nova, "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif !important;
+    font-weight: normal;
+    margin-bottom: auto;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    background-color: #008CBA;
+    border: 1px solid #ffffff;
+    background: #fff;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
     margin-bottom: 10px;
 }
