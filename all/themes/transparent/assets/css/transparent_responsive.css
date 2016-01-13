@@ -215,10 +215,10 @@ input[type=submit]{
 
 #logo-touch > a > img{
     margin-top:5px;
+    height: 40px;
 }
-
-#condensedMobile {
-    background: #354149;
+#mobileMenu_btn > img{
+    height: 20px;
 }
 
 #mobileMenu_btn, #mobileCart_btn {

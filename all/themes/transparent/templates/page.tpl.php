@@ -90,7 +90,7 @@
 							<a id="mobileMenu_btn" class="left-off-canvas-toggle" href="#"><img src="<?php echo base_path(); ?>sites/all/themes/transparent/assets/img/menuBars_mobile.svg"></a>
 						</div>
 						<div class="small-6 columns text-center" id="logo-touch">
-							<a title="Transparent" href="/"><img src="<?php echo base_path(); ?>sites/all/themes/transparent/assets/img/logo-dark.svg"></a>
+							<a title="Transparent" href="/"><img src="<?php echo base_path(); ?>sites/all/themes/transparent/assets/img/logo-mobile.svg"></a>
 						</div>
 						<div class="header-cart-icon small-3 columns right-side">
 						</div>
