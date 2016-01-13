@@ -78,13 +78,11 @@ input[type=submit]{
 
 /* NAV STYLES */
 .logo-div{
-    background-color: #354149;
+    background-color: #fff;
     z-index: 10;
     height: 55px;
     left: 0;
-    position: fixed;
     line-height: 55px;
-    position: fixed;
     right: 0;
     top: 0px;
     transition: all 0.75s ease 0s;
@@ -94,7 +92,7 @@ input[type=submit]{
 
 .logo-div a img {
     position: relative;
-    z-index: 9999;
+    height: 60%;
 }
  img{
     display: inline-block;
@@ -121,18 +119,17 @@ input[type=submit]{
  }
  #primary-nav{
     margin: 0;
-    position: relative;
     transition: top 0.75s ease 0s;
     height: 47px;
     top: 15px;
     width: 100%;
+    margin-top: -47px;
  }
  #primary-nav a{
-     color: white;
-     
+     font-weight: 600;
  }
  
- #primar-nav a:hover{
+ #primary-nav a:hover{
      color: black;
  }
  #primary-nav > ul {
@@ -147,7 +144,6 @@ input[type=submit]{
     opacity: 1;
     transition: opacity 1s ease 0.5s;
     position: relative;
-    z-index: 9999;
 }
 
 #primary-nav ul li {
@@ -161,11 +157,9 @@ input[type=submit]{
 }
 
 #account-nav {
-    color: #fff;
     float: right;
     padding-top: 2px;
     position: relative;
-    z-index: 9999;
     width: 40%;
 }
 
@@ -176,7 +170,6 @@ input[type=submit]{
 }
 
 #account-nav ul a{
-    color: #fff;
     text-transform: uppercase;
 }
 
@@ -531,9 +524,7 @@ input[type=submit]{
 .card-style .thumb-image-responsive img {
     max-width: 100%
 }
-.card-style .card-content-patterntap {
-    /* padding:.5rem 1rem */
-}
+
 .card-style .card-content-patterntap h4 {
     font-size: 13px;
     text-transform: capitalize;
@@ -2168,4 +2159,12 @@ div.download-link{
   font-weight: bolder;
   margin-bottom: 20px;
   margin-top: 20px;
+}
+
+.title-div{
+    background: #1366a5;
+}
+.title-div h3.title#page-title{
+    color: white;
+    padding: 20px;
 }

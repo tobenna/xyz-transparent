@@ -116,19 +116,21 @@
 				</div>
 
 			</header>
+        <div class="title-div">
+          <div class="row small-12 large-10 medium-11">
+            <?php print render($title_prefix); ?>
+            <?php if ($title): ?><h3 class="title" id="page-title"><?php print $title; ?></h3><?php endif; ?>
+            <?php print render($title_suffix); ?>
+          </div>
+        </div>
+        
 			<!-- Main Page Content-->
 			<div class="content row small-12 large-10 medium-11">
 				<div class="small-12">
             <?php print $messages; ?>
-					<br>
-					<br>
 				</div>
 				<!-- MAIN Content Block -->
 				<div class="small-12 medium-12 large-12 columns">
-            
-            <?php print render($title_prefix); ?>
-            <?php if ($title): ?><h3 class="title" id="page-title"><?php print $title; ?></h3><?php endif; ?>
-            <?php print render($title_suffix); ?>
             <?php if ($tabs): ?><div class="tabs"><?php print render($tabs); ?></div><?php endif; ?>
             <?php print render($page['help']); ?>
             <?php if ($action_links): ?><ul class="action-links"><?php print render($action_links); ?></ul><?php endif; ?>
@@ -149,8 +151,6 @@
 				</aside>
 				<!-- END Side Bar Second -->
 			</div>
-          <br>
-					<br>
       <div class="row large-10">
         <?php if ($page['content_bottom']): ?>
           <?php print render($page['content_bottom']); ?>

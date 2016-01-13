@@ -1,0 +1,217 @@
+PROJECT MANAGEMENT SYSTEM WITH WORKFLOW AND PAYMENT OPTIMISATION FOR ENUGU STATE UNIVERSAL BASIC EDUCTION BOARD
+
+
+
+
+Proposed By
+
+
+
+
+Joanns Trading Company 
+RC: EN009153
+
+
+
+
+
+
+INTELLECTUAL PROPERTY ADVISORY
+The information in this proposal shall not be disclosed outside Enugu State Universal Basic Education Board and shall not be duplicated, used or disclosed in whole or in part for any purpose other than for the intended use, provided that if a contract is awarded to Joanns Trading Company as a result of or in connection with the submission of this proposal, Enugu State Universal Basic Education Board shall have the right to duplicate, use or disclose the information to the extent provided by the contract. This restriction does not limit the right of Enugu State Universal Basic Education Board to use information contained in the proposal if it is obtained from another source without restriction
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+September 28th, 2015
+
+The Chairman,
+Enugu State Universal Basic Education Board,
+Enugu
+
+Dear Sir/Madam,
+DESIGN AND IMPLEMENTATION OF A SYSTEM FOR PROJECT MANAGEMENT, WORKFLOW AND PAYMENTS ADMINISTRATION 
+Sequel to our understanding of your organisation’s workflow processes and project administration requirements, we therefore present to you a breakdown of the activities and costing associated with the proposed portal for your organisation. 
+This project will deliver flexibility and ease to the management of your projects, which will not only ensure the reduction in project expenditure, but will also ensure the appropriate documentation and tracking of every single activity which goes on in the project. This project will bring high level efficiency and easy monitoring of the state of projects. 
+It is centred around a streamlined approach towards workflow and project management with emphasis on project status and payments tracking with detailed graphic representations where applicable together with creation and management of project workflow, project cost management, project procurement management, project document management, automated project report generation, contract management, remote site supervision, viewing of project status, project team management and other desirable features geared towards addressing your requirements.
+We look forward to seeing your organisation tap into the numerous benefits of this optimised project management system. 
+
+Yours faithfully,
+
+
+Ndu, Tobenna
+
+Joanns Trading Company
+
+
+SECTION 1: EXECUTIVE SUMMARY
+OVERVIEW OF PROJECT MANAGEMENT AND WORKFLOW CONTROL
+A project is a temporary endeavour designed to produce a unique product, service or result with a defined beginning and end (usually time-constrained, and often constrained by funding or deliverables) undertaken to meet unique goals and objectives, typically to bring about beneficial change or added value. Effective execution of the aforementioned hence involves application of proper project management and workflow control with optimum efficiency when executed using an meticulously developed systems (Project management and workflow system). 
+Project management is the discipline of carefully projecting or planning, organising, motivating and controlling resources to achieve specific goals and meet specific success criteria. The primary challenge of project management is to achieve all of the project goals and objectives while honouring the preconceived constraints. The primary constraints are scope, time, quality and budget. The secondary — and more ambitious — challenge is to optimize the allocation of necessary inputs and integrate them to meet pre-defined objectives. 
+Workflow can be described simply as the movement of documents and tasks through a business process. Workflow can be a sequential progression of work activities or a complex set of processes each taking place concurrently, eventually impacting each other according to a set of rules, routes, and roles.
+A Project management system has the capacity to help plan, organise, and manage resource pools and develop resource estimates. It can also manage estimation and planning, scheduling, cost control and budget management, resource allocation, collaboration software, communication, decision-making, quality management and documentation or administration systems. Today, numerous PC & browser based project management software solutions exist and they are finding their way into almost every type of business
+Workflow Management Systems allow organisations to define and control the various activities associated with a business process. In addition, many management systems also allow a business the opportunity to measure and analyse the execution of the process so that constant efficiency is assured.
+In practice, the management of an integrated system with capabilities to handle the functionalities of both systems requires the development of distinct technical skills and management strategies.
+An efficient system is pertinent in streamlining the basic processes inherent in project management and workflow control which include:
+
+Initiation:  An idea for a project will be carefully examined to determine whether or    not it benefits the organization. During this phase, a decision making team will identify if the project can realistically be completed
+Planning and design:  A project plan, project charter and/or project scope may be put in writing, outlining the work to be performed. During this phase, a team should prioritize the project, calculate a budget and schedule, and determine what resources are needed
+Execution and construction:  Resources' tasks are distributed and teams are informed of responsibilities. This is a good time to bring up important project related information.
+Monitoring and controlling systems:  Here comparisons are made to compare project status and progress to the actual plan, as resources perform the scheduled work. During this phase, project managers may need to adjust schedules or do what is necessary to keep the project on track
+Completion and finish point : After project tasks are completed and the client has approved the outcome, an evaluation is necessary to highlight project success and/or learn from project history.
+Though the system could be utilized in all above mentioned processes, however; it is most cogent in the monitoring and control stage where it ensures timely and transparent process management and completely eliminates the possibility of human error. 
+
+Project Objectives
+To design a portal for project management with workflow and payment control for Enugu State Universal Basic Education Board. The application will be an integrated portal to address your organization’s project management, workflow and payment optimization requirements. Outlined below are the basic features of the system:
+Activity Cost Accounting/Payment Control: This tracks approvals and payments made at the various stages of a particular project to ensure transparent operation and thereby promote timely progression of every project.
+Providing Information: The system is also expected to provide information to various people or stakeholders and can be used to measure and justify the level of effort required to complete the project(s). Such requirements might include; information on how long tasks will take to complete, information of workload, evidence in regards to the various tasks, progress and status of the project, cost maintenance, instant communication to collaborators and all the persons involved
+Resource allocation: This identifies the resources needed and schedules their involvement. It might also consider the efficient integration of those resources and do contingency planning in case certain resources are not sufficient or available. Some planners might include budgeting as part of the resource allocation process
+Status/Progress tracking: This measures the progress and value of a project, especially during implementation. A comprehensive and systematic approach is utilised to ensure reduced cost and provide early detection of bottlenecks 
+
+Key Performance Indicators (KPI) based reports: Reports are provided for the various stages of the project which could be utilised in external and internal audits
+Service Level Agreement (SLA) status indicators: The progress status of every project can also be tracked to ensure they meet all service level agreements.
+Project evaluation: The system also engenders progressive project evaluation during project implementation and after completion in order to assess the quality of activities and achievement of results
+Task Initiation and Control: The business process defined above is initiated and the appropriate human and IT resources are scheduled and/or engaged to complete each activity as the process progresses
+Worklists (Automated Tasks): These allow each worker to quickly identify their current tasks along with such things as due date, goal date, and priority. Anticipated workload can be displayed as well. These systems analyze where jobs are in the workflow and how long each step should take, and then estimate when various tasks will reach an individual’s desk. In task automation tasks can be automatically invoked. This might include such things as letter writing, email notices, or execution of project processes
+Distribution Lists for messages & Event Notification: Staff and/or involved personnel can be notified when certain milestones occur or when workload increases, etc. Distribution lists can also be created for sending ad-hoc messages among the personnel
+
+
+Risk Mitigation Model
+
+POLICY RISK
+
+Enugu State Universal Basic Education Board requirements have been largely understood, thus we advocate for the policies governing the business rules to remain largely unchanged during systems design and deployment. If these policies change, then the technology investments as well as project as a whole can be affected.
+
+OPERATIONAL RISK
+
+These occur as a result of poor logistics and foresight. There is risk of accident or damage during hardware delivery. Insurance takes care of losses; however the impact on timeline is the greater reason why this will be avoided at all costs.
+We will also ensure that the system specification of all hardware and software is signed off by procurement prior to final purchase so we do not have rejections on delivery.
+
+FINANCIAL RISK
+
+Our client, Enugu State Universal Basic Education Board, should endeavour to stick to payment. There will be optimal delivery when terms are obeyed by both parties. This will enable timely deployment of the portal and consequent efficient technical support.
+
+
+
+
+
+
+
+
+
+SECTION 2: PROJECT IMPLEMENTATION STRATEGY
+
+STRATEGY SYNOPSIS:
+Requirement Gathering: 
+At this stage we would interact with appropriate personnel to ascertain useful information that would facilitate effective implementation of the project as well as smooth data collection with respect to your organization.
+System Development:
+Here we would develop the website according to the gathered requirements and ensure that it conforms to all the corporate objectives of your organization.
+Testing:
+At this stage appropriate tests would be carried to ensure that the designed website could carry out the required functionalities.
+Deployment and Hosting:
+Here we would host the website and ensure that it could be visited by requesting users which is therefore the realization of our objectives
+User Support and Maintenance:
+Support services and other necessary post-deployment information shall be made available immediately after the deployment of the project (this is to be agreed upon).
+Except if a slight shift in span is urgently requested by Enugu State Universal Basic Education Board, the above outlined deployment plan would span a period of 2 – 3 months.
+OUR PROPOSED TECHNOLOGY PLATFORM
+
+Front end layout 
+HTML and CSS
+Ajax 
+JQuery
+Backend Design and Management
+PHP
+Drupal
+PostgreSQL 
+
+FEATURES OF THESE PLATFORMS
+Flexibility
+Portability
+High data integrity
+Efficiency
+Easy integration with other systems
+PROPOSED PROJECT TIMELINE 
+
+
+The above outlined deployment plan would span a period of 3 Weeks
+SECTION 3: STATEMENT OF WORK
+This section defines the scope of work to be performed by Joanns Trading Company on this Project. Also included in the Statement of Work are the tasks to be performed by Joanns Trading Company and Enugu State Universal Basic Education Board.
+The following are incorporated in and made part of this Statement of Work:
+Joanns Trading Company Delivery Processes
+Training and Communication Plan
+Project Management Plan
+User Acceptance Testing
+The objective of this phase is to test the portal on the production environment (internet hosted server) and make sure that each stipulated function works correctly and produces the desired result at each click.
+Deployment
+Using the Pilot approach, once each module is certified complete, it will be uploaded and running
+Communication Plan
+Communication would be basically through e-mails, SMS and phone calls or any means convenient for your organization
+Training / Support Centre
+Administrators will be trained on system use and there will be enterprise level support from us. The service support centre will include experienced professionals that will be on call support on the use of the system. 
+We know and believe that the better trained the users are, the more operationally efficient the user experience is going to be.
+The experienced team of experts will also ensure second level support (Call and Email). There is round the clock power and internet availability and this team will ensure the entire enterprise chain is supported. 
+
+There will also be context sensitive help accompanying the solution. This will enable end users to learn how to use each module easily. The benefit of the context sensitive help is that users of the system derive online help from whatever part of the solution they are interacting with. 
+The training would involve system administrators and support staff. During the course of the project, a complete training document will be developed and documented for use.
+
+Service Support Strategy
+
+During the course of the project, a complete support strategy document will be developed and documented for use after going live. Technical support will strictly adhere to the support contract that would be drafted and signed off by the Enugu State Universal Basic Education Board. A service level agreement containing issue resolution and response timelines will be signed to ensure 24/7 service uptime.
+Quality Assurance Approach
+
+All phases of the solution development would be marked by sign-offs from Enugu State Universal Basic Education Board technical resources designated to ensure that the quality and standards of the organization are maintained across board throughout system development and deployment. We always deploy software best practices in all our solution deliveries. The whole iterative process will adhere to industry best practices and will be verified by our quality assurance managers.
+
+Project Benefits to Enugu State Universal Basic Education Board 
+Payments Control            
+Automatic Calculation of Payment information thereby eliminating the possibility of human errors in calculation that can lead to inaccurate payments. Also automatic generation of Payment Vouchers for projects is also incorporated.
+Project Process Transparency:
+Certain key tasks inherent in projects can no longer be held up on purpose as every stage of the project is progressively tracked hence it becomes evident which particular department or staff that might be responsible for holding up a particular process.
+Ease of use
+The design would be totally user friendly and would not require extensive computer literacy for its use and will also ensure easy navigation and better organisation of vital information
+ Improved Security and Reliability: 
+The system provides secure storage and access to a consistent set of all of the data related to a project. The Workflow management unites data from many different departments and provides this data with organisation and integrity. Using mechanisms such as role privileges (determines who can access and/or change information), process control (e.g. a document may need management approval before moving on to the next step), version control, and system back-ups, the data becomes more reliable.
+To maximize Project Management Flexibility: 
+At the initial point of contact Just as important as reengineering is, the system supports continuous project process improvement. It will progressively log information about how a defined task is actually working in practice and provide valuable insights into areas which might be better tuned.
+
+Opportunities for Organizational Advancement: 
+The system can help agencies and departments achieve the organisational changes necessary to operate effectively in today’s world. These changes might include the move to a flatter organisational structure and greater team orientation. Since activity steps, roles, and rules are built into the system, less intervention should be needed to manage the project processes. In addition, improved communications provided by notifications, document sharing, and an improved understanding of the process itself can lead to increased collaboration among team members and/or across teams and business units. Workflow and project management systems tend to unify people with diverse skills into a more cohesive unit.
+
+Auto Report Generation:
+Reports at the various stages o a project are generated and can prove essential for the purpose of internal and external auditors thereby ensuring project integrity. They also help the project managers to be able to get an overview of every project they’re managing.
+
+
+Remote Project Supervision:
+This platform gives your organisation the opportunity to monitor ongoing projects right from your office. It reduces the need of frequently going to sites for supervision as the engineers that inspect the site can upload pictures and other information from the ongoing projects directly to the portal, thereby keeping you informed on the progress of the projects.
+
+
+
+
+
+
+
+SECTION 4: PROJECT COST ANALYSIS
+
+
+
+
+
+

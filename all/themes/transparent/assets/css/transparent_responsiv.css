@@ -123,10 +123,12 @@ input[type=submit]{
  }
  #primary-nav{
     margin: 0;
-    position: relative;
     transition: top 0.75s ease 0s;
     height: 47px;
+    top: 15px;
     width: 100%;
+    position: fixed;
+    z-index: 99999;
  }
  #primary-nav a{
      color: white;
